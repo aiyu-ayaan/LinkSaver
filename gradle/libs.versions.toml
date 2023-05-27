@@ -1,0 +1,41 @@
+[versions]
+agp = "8.1.0-beta03"
+android-viewbinding = "1.0.4"
+coil = "2.4.0"
+hilt-android-compiler = "2.46"
+navigation-safe-args-gradle-plugin = "2.5.3"
+org-jetbrains-kotlin-android = "1.8.0"
+core-ktx = "1.10.1"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+appcompat = "1.6.1"
+material = "1.9.0"
+constraintlayout = "2.1.4"
+room-compiler = "2.5.1"
+room-ktx = "2.5.1"
+url-imageloader = "1.0.0"
+
+[libraries]
+android-viewbinding = { module = "com.github.yogacp:android-viewbinding", version.ref = "android-viewbinding" }
+androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation-safe-args-gradle-plugin" }
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android-compiler" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android-compiler" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation-safe-args-gradle-plugin" }
+navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation-safe-args-gradle-plugin" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-compiler" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-ktx" }
+url-imageloader = { module = "com.github.aiyu-ayaan:url-imageloader", version.ref = "url-imageloader" }
+
+
+[plugins]
+com-android-application = { id = "com.android.application", version.ref = "agp" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+com-android-library = { id = "com.android.library", version.ref = "agp" }
+[bundles]
+
