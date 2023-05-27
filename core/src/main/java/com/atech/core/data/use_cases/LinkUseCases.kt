@@ -2,7 +2,6 @@ package com.atech.core.data.use_cases
 
 import com.atech.core.data.database.LinkDao
 import com.atech.core.data.model.LinkModel
-import com.atech.core.util.isLink
 import javax.inject.Inject
 
 
@@ -28,8 +27,6 @@ class InsertLink @Inject constructor(
     suspend operator fun invoke(
         linkModel: LinkModel
     ) {
-        if (!linkModel.url.isLink())
-            throw Exception("Invalid Link")
         doa.insertLink(linkModel)
     }
 }
@@ -41,8 +38,6 @@ class UpdateLink @Inject constructor(
     suspend operator fun invoke(
         linkModel: LinkModel
     ) {
-        if (!linkModel.url.isLink())
-            throw Exception("Invalid Link")
         doa.updateLink(linkModel)
     }
 }

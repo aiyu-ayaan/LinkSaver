@@ -14,7 +14,7 @@ material = "1.9.0"
 constraintlayout = "2.1.4"
 room-compiler = "2.5.1"
 room-ktx = "2.5.1"
-url-imageloader = "1.0.0"
+url-imageloader = "1.0.2"
 
 [libraries]
 android-viewbinding = { module = "com.github.yogacp:android-viewbinding", version.ref = "android-viewbinding" }

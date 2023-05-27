@@ -3,4 +3,6 @@
     <string name="searchbar_hint">Search For Link</string>
     <string name="archive">Archive</string>
     <string name="bin">Bin</string>
+    <string name="icon_des">Website Icon</string>
+    <string name="thumbnail_des">"Thumbnail "</string>
 </resources>
