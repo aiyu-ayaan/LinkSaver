@@ -12,7 +12,7 @@ import com.atech.core.data.model.LinkModel
 @Dao
 interface LinkDao {
 
-    @Query("SELECT * FROM link")
+    @Query("SELECT * FROM link order by created desc")
     fun getAllLinks(): LiveData<List<LinkModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -5,7 +5,7 @@
     style="?attr/materialCardViewFilledStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/grid_1"
+    android:layout_marginHorizontal="@dimen/grid_2"
     android:layout_marginVertical="@dimen/grid_0_5">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +18,7 @@
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
             android:contentDescription="@string/icon_des"
+            app:layout_constraintBottom_toBottomOf="@+id/materialButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -28,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="?colorSurface"
-            app:icon="@drawable/round_star_outline_24"
+            app:icon="@drawable/round_open_in_new_24"
             app:iconTint="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,13 +54,16 @@
             android:id="@+id/text_view_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/grid_1"
+            android:layout_marginTop="@dimen/grid_0_5"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:paddingVertical="@dimen/grid_0_5"
-            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_view_icon"
+            app:layout_constraintTop_toBottomOf="@+id/materialButton"
             tools:text="This is Title...."
             tools:visibility="visible" />
 
@@ -67,9 +71,11 @@
             android:id="@+id/text_view_des"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/grid_1"
+            android:layout_marginTop="@dimen/grid_0_5"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:paddingVertical="@dimen/grid_0_5"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textAppearance="?attr/textAppearanceCaption"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +87,7 @@
             android:id="@+id/image_view_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="@dimen/thumbnail_image_size"
-            android:layout_marginTop="@dimen/grid_1"
+            android:layout_marginTop="@dimen/grid_0_5"
             android:layout_marginBottom="@dimen/grid_1"
             android:contentDescription="@string/thumbnail_des"
             android:visibility="gone"

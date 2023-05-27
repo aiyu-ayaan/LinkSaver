@@ -5,6 +5,7 @@ import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentHomeBinding
@@ -23,8 +24,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             setRecyclerView()
+            setFab()
         }
         observeViewList()
+    }
+
+    private fun FragmentHomeBinding.setFab() {
+        fab.setOnClickListener {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToAddBottomSheetFragment()
+            )
+        }
     }
 
 
