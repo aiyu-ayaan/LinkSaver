@@ -14,6 +14,7 @@ import com.atech.linksaver.databinding.BottomSheetAddBinding
 import com.atech.linksaver.utils.closeKeyboard
 import com.atech.linksaver.utils.openKeyboard
 import com.atech.urlimageloader.kotlin.UrlImageLoader.Companion.getLinkDetailsUrl
+import com.atech.urlimageloader.utils.extractQueryFromUrl
 import com.atech.urlimageloader.utils.makeValidUrl
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,7 +47,7 @@ class AddBottomSheetFragment : BottomSheetDialogFragment() {
                     binding.textInputLayoutLink.error = "Please enter a valid link"
                     return@setOnClickListener
                 }
-                getLinkDetailsUrl(link) { details, error ->
+                getLinkDetailsUrl(link.extractQueryFromUrl()) { details, error ->
                     if (error != null) {
                         val model = LinkModel(
                             url = link.makeValidUrl(),

@@ -1,13 +1,12 @@
 package com.atech.core.util
 
-import android.app.Activity
 import android.content.Context
 
 
 fun String.isLink(): Boolean {
-    val pattern =
-        "^https?://(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(?:/[a-zA-Z0-9-]*)*(?:\\?[a-zA-Z0-9-_=]*)?(?:#[a-zA-Z0-9-_]*)?$"
-    return this.matches(pattern.toRegex())
+    val regex = "(?i)((http|https)://)?(www\\.)?[a-zA-Z0-9@:%._\\+~#?&//=]" +
+            "{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)"
+    return this.matches(regex.toRegex())
 }
 
 fun String.replaceHttps(): String {
@@ -16,7 +15,7 @@ fun String.replaceHttps(): String {
 }
 
 
-fun Context.openLink(link : String){
+fun Context.openLink(link: String) {
     val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
     intent.data = android.net.Uri.parse(link)
     startActivity(intent)

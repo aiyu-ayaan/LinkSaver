@@ -1,27 +1,36 @@
 package com.atech.linksaver.ui.fragment.home.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.decode.SvgDecoder
 import coil.load
-import coil.transform.CircleCropTransformation
-import coil.transform.RoundedCornersTransformation
 import com.atech.core.data.model.LinkDiffCallback
 import com.atech.core.data.model.LinkModel
 import com.atech.core.util.openLink
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.RowLinksBinding
+import com.atech.linksaver.utils.loadIcon
+import com.atech.linksaver.utils.loadImage
 
-class LinkAdapter : ListAdapter<LinkModel, LinkAdapter.LinkViewHolder>(LinkDiffCallback()) {
+class LinkAdapter(
+    private val onItemClicked: (Pair<LinkModel, View>) -> Unit = { _ -> }
+) : ListAdapter<LinkModel, LinkAdapter.LinkViewHolder>(LinkDiffCallback()) {
 
     inner class LinkViewHolder(
         private val binding: RowLinksBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
+            binding.root.setOnClickListener {
+                adapterPosition.let { position ->
+                    if (position != RecyclerView.NO_POSITION) {
+                        onItemClicked(getItem(position) to binding.root)
+                    }
+                }
+            }
             binding.materialButton.setOnClickListener {
                 adapterPosition.let { position ->
                     if (position != RecyclerView.NO_POSITION) {
@@ -35,6 +44,7 @@ class LinkAdapter : ListAdapter<LinkModel, LinkAdapter.LinkViewHolder>(LinkDiffC
 
         fun bind(linkModel: LinkModel) {
             binding.apply {
+                root.transitionName = linkModel.url
                 textViewLink.text = linkModel.url
                 bottomItemLogic(linkModel)
             }
@@ -48,7 +58,7 @@ class LinkAdapter : ListAdapter<LinkModel, LinkAdapter.LinkViewHolder>(LinkDiffC
                     binding.textViewTitle.isVisible = true
                     binding.textViewTitle.text = title!!.trim()
                 }
-                if (description.isNullOrEmpty()) {
+                if (description.isNullOrEmpty() || description == title) {
                     binding.textViewDes.isVisible = false
                 } else {
                     binding.textViewDes.isVisible = true
@@ -56,31 +66,14 @@ class LinkAdapter : ListAdapter<LinkModel, LinkAdapter.LinkViewHolder>(LinkDiffC
                 }
                 if (icon.isNullOrEmpty()) {
                     binding.imageViewIcon.load(R.drawable.avatar_svgrepo_com)
-                } else {
-                    binding.imageViewIcon.load(icon) {
-                        crossfade(true)
-                        placeholder(R.drawable.avatar_svgrepo_com)
-                        if (icon!!.endsWith(".svg")) {
-                            decoderFactory { result, options, _ ->
-                                SvgDecoder(
-                                    result.source,
-                                    options
-                                )
-                            }
-                        }
-                        transformations(CircleCropTransformation())
-                    }
-                }
+                } else
+                    binding.imageViewIcon.loadIcon(icon!!)
+
                 if (thumbnail.isNullOrEmpty()) {
                     binding.imageViewThumbnail.isVisible = false
                 } else {
                     binding.imageViewThumbnail.isVisible = true
-                    binding.imageViewThumbnail.load(thumbnail) {
-                        crossfade(true)
-                        placeholder(R.drawable.loading_svgrepo_com)
-                        transformations(RoundedCornersTransformation(16f))
-                        scale(coil.size.Scale.FILL)
-                    }
+                    binding.imageViewThumbnail.loadImage(thumbnail!!)
                 }
             }
         }

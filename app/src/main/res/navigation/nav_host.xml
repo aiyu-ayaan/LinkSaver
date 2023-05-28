@@ -13,10 +13,22 @@
         <action
             android:id="@+id/action_homeFragment_to_addBottomSheetFragment"
             app:destination="@id/addBottomSheetFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <dialog
         android:id="@+id/addBottomSheetFragment"
         android:name="com.atech.linksaver.ui.fragment.add.AddBottomSheetFragment"
         android:label="bottom_sheet_add"
         tools:layout="@layout/bottom_sheet_add" />
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.atech.linksaver.ui.fragment.detail.DetailFragment"
+        android:label="fragment_link_details"
+        tools:layout="@layout/fragment_link_details" >
+        <argument
+            android:name="link"
+            app:argType="com.atech.core.data.model.LinkModel" />
+    </fragment>
 </navigation>
