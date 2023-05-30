@@ -75,7 +75,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun observeViewList() {
         viewModel.link.observe(viewLifecycleOwner) {
             homeAdapter.submitList(it)
-            Log.d("AAA", "observeViewList: ${it[0].icon}")
         }
     }
 }

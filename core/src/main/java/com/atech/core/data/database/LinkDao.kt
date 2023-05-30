@@ -20,7 +20,7 @@ interface LinkDao {
 
 
     @Update
-    suspend fun updateLink(linkModel: LinkModel)
+    suspend fun updateLink(linkModel: LinkModel) : Int
 
 
     @Delete

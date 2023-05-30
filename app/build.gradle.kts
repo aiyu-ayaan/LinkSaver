@@ -59,7 +59,6 @@ dependencies {
     implementation(libs.android.viewbinding)
     implementation(libs.coil)
     implementation(libs.coil.svg)
-    implementation(libs.url.imageloader)
 
 }
 

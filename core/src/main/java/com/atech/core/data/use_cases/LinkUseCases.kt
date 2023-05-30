@@ -2,6 +2,7 @@ package com.atech.core.data.use_cases
 
 import com.atech.core.data.database.LinkDao
 import com.atech.core.data.model.LinkModel
+import com.atech.core.util.loadImageCallback
 import javax.inject.Inject
 
 
@@ -22,23 +23,30 @@ class GetAllLinks @Inject constructor(
 
 
 class InsertLink @Inject constructor(
-    private val doa: LinkDao
+    private val dao: LinkDao
 ) {
     suspend operator fun invoke(
-        linkModel: LinkModel
-    ) {
-        doa.insertLink(linkModel)
+        link: String,
+
+        ) {
+        val linkModel = loadImageCallback(link)
+        dao.insertLink(linkModel)
     }
 }
 
 
 class UpdateLink @Inject constructor(
-    private val doa: LinkDao
+    private val dao: LinkDao
 ) {
     suspend operator fun invoke(
-        linkModel: LinkModel
+        link: String,
+        old: LinkModel
     ) {
-        doa.updateLink(linkModel)
+        if (link == old.url)
+            return
+        val linkModel = loadImageCallback(link)
+        dao.deleteLink(old)
+        dao.insertLink(linkModel.copy(created = old.created))
     }
 }
 
