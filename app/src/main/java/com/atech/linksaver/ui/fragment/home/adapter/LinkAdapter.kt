@@ -1,8 +1,10 @@
 package com.atech.linksaver.ui.fragment.home.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +18,19 @@ import com.atech.linksaver.utils.loadIcon
 import com.atech.linksaver.utils.loadImage
 
 class LinkAdapter(
-    private val onItemClicked: (Pair<LinkModel, View>) -> Unit = { _ -> }
+    private val onItemLongClicked: () -> Unit = { },
+    private val onItemClicked: (Pair<LinkModel, View>, Boolean, CheckBox) -> Unit = { _, _, _ -> },
 ) : ListAdapter<LinkModel, LinkAdapter.LinkViewHolder>(LinkDiffCallback()) {
+
+    private var isLongClickEnable = false
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setLongClick(value: Boolean) {
+        isLongClickEnable = value
+        notifyDataSetChanged()
+    }
+
 
     inner class LinkViewHolder(
         private val binding: RowLinksBinding
@@ -25,11 +38,35 @@ class LinkAdapter(
 
         init {
             binding.root.setOnClickListener {
+                if (isLongClickEnable) {
+                    changeOnLongClickState()
+                }
+
                 adapterPosition.let { position ->
                     if (position != RecyclerView.NO_POSITION) {
-                        onItemClicked(getItem(position) to binding.root)
+                        onItemClicked(
+                            getItem(position) to binding.root,
+                            isLongClickEnable,
+                            binding.checkBox
+                        )
                     }
                 }
+            }
+            binding.root.setOnLongClickListener {
+                if (isLongClickEnable) return@setOnLongClickListener true
+                changeOnLongClickState()
+                isLongClickEnable = true
+                adapterPosition.let { position ->
+                    if (position != RecyclerView.NO_POSITION) {
+                        onItemClicked(
+                            getItem(position) to binding.root,
+                            isLongClickEnable,
+                            binding.checkBox
+                        )
+                        onItemLongClicked()
+                    }
+                }
+                true
             }
             binding.materialButton.setOnClickListener {
                 adapterPosition.let { position ->
@@ -48,7 +85,19 @@ class LinkAdapter(
                 textViewLink.text = linkModel.url
                 bottomItemLogic(linkModel)
             }
+            resetOnLongClickState()
         }
+
+        private fun changeOnLongClickState() = binding.checkBox.apply {
+            isVisible = true
+            isChecked = true
+        }
+
+        private fun resetOnLongClickState() = binding.checkBox.apply {
+            isVisible = false
+            isChecked = false
+        }
+
 
         private fun bottomItemLogic(linkModel: LinkModel) {
             linkModel.apply {
@@ -66,8 +115,7 @@ class LinkAdapter(
                 }
                 if (icon.isNullOrEmpty()) {
                     binding.imageViewIcon.load(R.drawable.avatar_svgrepo_com)
-                } else
-                    binding.imageViewIcon.loadIcon(icon!!)
+                } else binding.imageViewIcon.loadIcon(icon!!)
 
                 if (thumbnail.isNullOrEmpty()) {
                     binding.imageViewThumbnail.isVisible = false
@@ -84,5 +132,9 @@ class LinkAdapter(
 
     override fun onBindViewHolder(holder: LinkViewHolder, position: Int) {
         holder.bind(getItem(position))
+    }
+
+    override fun getItemId(position: Int): Long {
+        return getItem(position).url.hashCode().toLong()
     }
 }

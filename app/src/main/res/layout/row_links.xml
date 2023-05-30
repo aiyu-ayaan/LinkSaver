@@ -8,93 +8,107 @@
     android:layout_marginHorizontal="@dimen/grid_2"
     android:layout_marginVertical="@dimen/grid_0_5">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/grid_1">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/image_view_icon"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:contentDescription="@string/icon_des"
-            app:layout_constraintBottom_toBottomOf="@+id/materialButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/avatar_svgrepo_com" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/materialButton"
-            style="?attr/materialIconButtonFilledStyle"
+        <CheckBox
+            android:id="@+id/check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="?colorSurface"
-            app:icon="@drawable/round_open_in_new_24"
-            app:iconTint="?attr/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/text_view_link"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/grid_0_5"
-            android:layout_marginEnd="@dimen/grid_0_5"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:padding="@dimen/grid_1"
-            android:textAppearance="?attr/textAppearanceTitleSmall"
-            app:layout_constraintBottom_toBottomOf="@+id/image_view_icon"
-            app:layout_constraintEnd_toStartOf="@+id/materialButton"
-            app:layout_constraintStart_toEndOf="@+id/image_view_icon"
-            app:layout_constraintTop_toTopOf="@+id/image_view_icon"
-            tools:text="This is Link" />
-
-        <TextView
-            android:id="@+id/text_view_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/grid_0_5"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textStyle="bold"
+            android:clickable="false"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialButton"
-            tools:text="This is Title...."
             tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/text_view_des"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/grid_0_25"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="?attr/textAppearanceCaption"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_title"
-            tools:text="This is Title...."
-            tools:visibility="visible" />
+            android:padding="@dimen/grid_1">
 
-        <ImageView
-            android:id="@+id/image_view_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/thumbnail_image_size"
-            android:layout_marginTop="@dimen/grid_0_5"
-            android:layout_marginBottom="@dimen/grid_1"
-            android:contentDescription="@string/thumbnail_des"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_des"
-            tools:srcCompat="@tools:sample/avatars"
-            tools:visibility="visible" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/image_view_icon"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:contentDescription="@string/icon_des"
+                app:layout_constraintBottom_toBottomOf="@+id/materialButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@drawable/avatar_svgrepo_com" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/materialButton"
+                style="?attr/materialIconButtonFilledStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?colorSurface"
+                app:icon="@drawable/round_open_in_new_24"
+                app:iconTint="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_view_link"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/grid_0_5"
+                android:layout_marginEnd="@dimen/grid_0_5"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="@dimen/grid_1"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
+                app:layout_constraintBottom_toBottomOf="@+id/image_view_icon"
+                app:layout_constraintEnd_toStartOf="@+id/materialButton"
+                app:layout_constraintStart_toEndOf="@+id/image_view_icon"
+                app:layout_constraintTop_toTopOf="@+id/image_view_icon"
+                tools:text="This is Link" />
+
+            <TextView
+                android:id="@+id/text_view_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/grid_0_5"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialButton"
+                tools:text="This is Title...."
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/text_view_des"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/grid_0_25"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_title"
+                tools:text="This is Title...."
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/image_view_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/thumbnail_image_size"
+                android:layout_marginTop="@dimen/grid_0_5"
+                android:layout_marginBottom="@dimen/grid_1"
+                android:contentDescription="@string/thumbnail_des"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_des"
+                tools:srcCompat="@tools:sample/avatars"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

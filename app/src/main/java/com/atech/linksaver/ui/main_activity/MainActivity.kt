@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.ActivityMainBinding
-import com.atech.urlimageloader.utils.makeValidUrl
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

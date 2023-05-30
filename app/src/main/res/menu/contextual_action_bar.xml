@@ -10,9 +10,8 @@
 
 
     <item
-        android:id="@+id/menu_bin"
-        android:icon="@drawable/outline_delete_sweep_24"
-        android:title="@string/bin"
+        android:id="@+id/menu_delete"
+        android:icon="@drawable/outline_delete_24"
+        android:title="@string/delete"
         app:showAsAction="ifRoom" />
-
 </menu>

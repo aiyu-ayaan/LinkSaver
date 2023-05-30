@@ -4,6 +4,8 @@
         <!-- Customize your light theme here. -->
         <item name="android:statusBarColor">?attr/colorSurface</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeCloseDrawable">@drawable/round_close_24</item>
     </style>
 
     <style name="Theme.LinkSaver" parent="Base.Theme.LinkSaver" />
