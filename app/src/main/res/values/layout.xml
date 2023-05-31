@@ -20,4 +20,5 @@
     <dimen name="thumbnail_image_size">
         120dp
     </dimen>
+    <dimen name="empty_image_size">250dp</dimen>
 </resources>

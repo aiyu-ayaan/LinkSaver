@@ -100,7 +100,7 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
     }
 
     private fun deleteNote() = launchWhenStarted {
-        usedCases.deleteLink(model)
+        usedCases.deletePermanent(model)
         findNavController().navigateUp()
     }
 

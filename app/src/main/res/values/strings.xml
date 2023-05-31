@@ -11,4 +11,8 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="delete">Delete</string>
+    <string name="deleteSelected">Are you sure you want to delete selected?</string>
+    <string name="restore">Restore</string>
+    <string name="delete_permanently">Delete Permanently</string>
+    <string name="restore_all">Restore All</string>
 </resources>

@@ -5,10 +5,10 @@ import android.content.DialogInterface
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 data class DialogModel(
-    val title: String,
-    val message: String,
-    val positiveText: String,
-    val negativeText: String,
+    var title: String,
+    var message: String,
+    var positiveText: String,
+    var negativeText: String,
     var positiveAction: (DialogInterface) -> Unit = { },
     var negativeAction: (DialogInterface) -> Unit = { }
 )

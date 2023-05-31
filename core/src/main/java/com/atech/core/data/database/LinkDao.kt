@@ -12,15 +12,22 @@ import com.atech.core.data.model.LinkModel
 @Dao
 interface LinkDao {
 
-    @Query("SELECT * FROM link order by created desc")
+    @Query("SELECT * FROM link WHERE isArchive = 0 AND isDeleted = 0 ORDER BY created DESC")
     fun getAllLinks(): LiveData<List<LinkModel>>
+
+
+    @Query("SELECT * FROM link WHERE isArchive = 1 ORDER BY created DESC")
+    fun getAllArchivedLinks(): LiveData<List<LinkModel>>
+
+    @Query("SELECT * FROM link WHERE isDeleted = 1 ORDER BY created DESC")
+    fun getAllDeletedLinks(): LiveData<List<LinkModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLink(linkModel: LinkModel)
 
 
     @Update
-    suspend fun updateLink(linkModel: LinkModel) : Int
+    suspend fun updateLink(linkModel: LinkModel): Int
 
 
     @Delete

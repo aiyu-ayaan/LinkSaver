@@ -20,7 +20,10 @@ import com.atech.core.data.model.LinkModel
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentHomeBinding
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
+import com.atech.linksaver.utils.DELETE_DIALOG
+import com.atech.linksaver.utils.universalDialog
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.transition.MaterialSharedAxis
 import com.google.android.material.transition.platform.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,8 +44,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.apply {
             setRecyclerView()
             setFab()
+            handleBottomAppBar()
         }
         observeViewList()
+    }
+
+    private fun FragmentHomeBinding.handleBottomAppBar() {
+        bottomAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_archive -> navigateToArchive()
+                R.id.menu_bin -> true
+                else -> false
+            }
+        }
+    }
+
+    private fun navigateToArchive(): Boolean {
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        val action = HomeFragmentDirections.actionHomeFragmentToArchiveFragment()
+        findNavController().navigate(action)
+        return true
     }
 
     private fun changeStatusBarColor() {
@@ -86,6 +108,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
                 return when (item?.itemId) {
                     R.id.menu_delete -> handleDelete()
+                    R.id.menu_add_to_archive -> addToArchive()
                     else -> false
                 }
             }
@@ -102,13 +125,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         val action = requireActivity().startActionMode(callback)
         selectedItem.observe(viewLifecycleOwner) {
+            action?.menu?.findItem(R.id.menu_delete)?.isVisible = it.isNotEmpty()
+            action?.menu?.findItem(R.id.menu_archive)?.isVisible = it.isNotEmpty()
             action?.title = it.size.toString()
         }
     }
 
+    private fun addToArchive(): Boolean {
+        selectedItem.value?.let {
+            viewModel.archiveLinks(it.toList())
+        }
+        return true
+    }
+
+
     private fun handleDelete(): Boolean {
-        viewModel.deleteLinks(selectedItem.value?.toList() ?: emptyList())
-        selectedItem.value = hashSetOf()
+        requireContext().universalDialog(DELETE_DIALOG.apply {
+            positiveText = getString(R.string.deleteSelected)
+            positiveAction = {
+                viewModel.deleteLinks(selectedItem.value?.toList() ?: emptyList())
+                selectedItem.value = hashSetOf()
+            }
+        })
         return true
     }
 
@@ -127,6 +165,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             } ?: hashSetOf(m.first)
             return
         }
+        navigateToDetailFragment(m)
+    }
+
+    private fun navigateToDetailFragment(m: Pair<LinkModel, View>) {
         exitTransition = MaterialElevationScale(false)
         reenterTransition = MaterialElevationScale(true)
         val extra = FragmentNavigatorExtras(
@@ -140,6 +182,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun observeViewList() {
         viewModel.link.observe(viewLifecycleOwner) {
             homeAdapter.submitList(it)
+            binding.emptyImage.isVisible = it.isEmpty()
         }
     }
 }

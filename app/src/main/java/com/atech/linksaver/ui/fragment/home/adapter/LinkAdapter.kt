@@ -53,7 +53,7 @@ class LinkAdapter(
                 }
             }
             binding.root.setOnLongClickListener {
-                if (isLongClickEnable) return@setOnLongClickListener true
+                if (isLongClickEnable) return@setOnLongClickListener false
                 changeOnLongClickState()
                 isLongClickEnable = true
                 adapterPosition.let { position ->

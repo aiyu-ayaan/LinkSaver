@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_archiveFragment"
+            app:destination="@id/archiveFragment" />
     </fragment>
     <dialog
         android:id="@+id/addBottomSheetFragment"
@@ -30,5 +33,14 @@
         <argument
             android:name="link"
             app:argType="com.atech.core.data.model.LinkModel" />
+    </fragment>
+    <fragment
+        android:id="@+id/archiveFragment"
+        android:name="com.atech.linksaver.ui.fragment.archive.ArchiveFragment"
+        android:label="fragment_archive"
+        tools:layout="@layout/fragment_archive" >
+        <action
+            android:id="@+id/action_archiveFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
 </navigation>
