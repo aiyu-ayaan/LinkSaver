@@ -21,7 +21,8 @@ data class LinkUseCases @Inject constructor(
     val updateIsDeleted: UpdateIsDeleted,
     val deletePermanent: DeletePermanent,
     val deleteAllLinks: DeleteAllLinks,
-    val autoDeleteIn30Days: AutoDeleteIn30Days
+    val autoDeleteIn30Days: AutoDeleteIn30Days,
+    val searchLink: SearchLink
 )
 
 
@@ -114,4 +115,12 @@ class AutoDeleteIn30Days @Inject constructor(
     suspend operator fun invoke() {
         doa.autoDeleteIn30Days()
     }
+}
+
+class SearchLink @Inject constructor(
+    private val doa: LinkDao
+) {
+    operator fun invoke(query: String) =
+        doa.getSearchResult(query)
+
 }

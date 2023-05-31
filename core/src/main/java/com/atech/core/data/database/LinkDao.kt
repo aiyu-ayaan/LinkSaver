@@ -15,6 +15,10 @@ interface LinkDao {
     @Query("SELECT * FROM link WHERE isArchive = 0 AND isDeleted = 0 ORDER BY created DESC")
     fun getAllLinks(): LiveData<List<LinkModel>>
 
+    @Query("SELECT * FROM link WHERE url LIKE '%'||:query||'%' or title LIKE '%'||:query||'%' or description LIKE '%'||:query||'%'" +
+            "and isArchive = 0 AND isDeleted = 0 ORDER BY created DESC")
+    fun getSearchResult(query:String):LiveData<List<LinkModel>>
+
 
     @Query("SELECT * FROM link WHERE isArchive = 1 ORDER BY created DESC")
     fun getAllArchivedLinks(): LiveData<List<LinkModel>>

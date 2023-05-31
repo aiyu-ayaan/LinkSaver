@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/empty_image"
+        android:layout_width="@dimen/empty_image_size"
+        android:layout_height="@dimen/empty_image_size"
+        android:layout_gravity="center"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_search"
+        android:visibility="visible" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -17,6 +17,15 @@ fun String.replaceHttps(): String {
 
 fun Context.openLink(link: String) {
     val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
-    intent.data = android.net.Uri.parse(link)
+    intent.data = android.net.Uri.parse(link.removeLastSlashFromUrl())
     startActivity(intent)
+}
+
+fun String.removeLastSlashFromUrl(): String {
+    val lastSlashIndex = this.lastIndexOf("/")
+    return if (lastSlashIndex >= 0) {
+        this.substring(0, lastSlashIndex) + this.substring(lastSlashIndex + 1)
+    } else {
+        this
+    }
 }

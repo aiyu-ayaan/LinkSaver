@@ -20,6 +20,7 @@ import com.atech.linksaver.utils.loadImage
 class LinkAdapter(
     private val onItemLongClicked: () -> Unit = { },
     private val onItemClicked: (Pair<LinkModel, View>, Boolean, CheckBox) -> Unit = { _, _, _ -> },
+    private val isLongClickable: Boolean = true,
 ) : ListAdapter<LinkModel, LinkAdapter.LinkViewHolder>(LinkDiffCallback()) {
 
     private var isLongClickEnable = false
@@ -53,6 +54,7 @@ class LinkAdapter(
                 }
             }
             binding.root.setOnLongClickListener {
+                if (isLongClickable) return@setOnLongClickListener false
                 if (isLongClickEnable) return@setOnLongClickListener false
                 changeOnLongClickState()
                 isLongClickEnable = true
