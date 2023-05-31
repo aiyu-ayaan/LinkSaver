@@ -19,4 +19,9 @@
         android:icon="@drawable/outline_delete_24"
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_restore"
+        android:icon="@drawable/round_restore_from_trash_24"
+        android:title="@string/restore"
+        app:showAsAction="ifRoom" />
 </menu>

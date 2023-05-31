@@ -20,7 +20,8 @@ data class LinkUseCases @Inject constructor(
     val updateArchive: UpdateArchive,
     val updateIsDeleted: UpdateIsDeleted,
     val deletePermanent: DeletePermanent,
-    val deleteAllLinks: DeleteAllLinks
+    val deleteAllLinks: DeleteAllLinks,
+    val autoDeleteIn30Days: AutoDeleteIn30Days
 )
 
 
@@ -104,5 +105,13 @@ class DeleteAllLinks @Inject constructor(
 ) {
     suspend operator fun invoke() {
         doa.deleteAllLinks()
+    }
+}
+
+class AutoDeleteIn30Days @Inject constructor(
+    private val doa: LinkDao
+) {
+    suspend operator fun invoke() {
+        doa.autoDeleteIn30Days()
     }
 }

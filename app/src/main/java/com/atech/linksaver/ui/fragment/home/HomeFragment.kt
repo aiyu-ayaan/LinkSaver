@@ -39,6 +39,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
         changeStatusBarColor()
+        viewModel.autoDeleteIn30Days()
         binding.apply {
             setRecyclerView()
             setFab()
@@ -51,10 +52,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         bottomAppBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_archive -> navigateToArchive()
-                R.id.menu_bin -> true
+                R.id.menu_bin -> navigateToBin()
                 else -> false
             }
         }
+    }
+
+    private fun navigateToBin(): Boolean {
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        val action = HomeFragmentDirections.actionHomeFragmentToBinFragment()
+        findNavController().navigate(action)
+        return true
     }
 
     private fun navigateToArchive(): Boolean {
@@ -93,6 +102,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val inflater = mode?.menuInflater
             inflater?.inflate(R.menu.contextual_action_bar, menu)
             menu?.findItem(R.id.menu_remove_to_archive)?.isVisible = false
+            menu?.findItem(R.id.menu_restore)?.isVisible = false
             true
         }, onPrepare = { _, _ ->
             binding.searchBar.isInvisible = true
