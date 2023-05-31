@@ -18,7 +18,7 @@ class HomeViewModel @Inject constructor(
 
     fun deleteLinks(links: List<LinkModel>) = viewModelScope.launch {
         links.forEach {
-            cases.deletePermanent.invoke(it)
+            cases.updateIsDeleted.invoke(it)
         }
     }
     fun archiveLinks(links: List<LinkModel>) = viewModelScope.launch {

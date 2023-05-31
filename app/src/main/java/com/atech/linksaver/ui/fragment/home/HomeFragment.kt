@@ -1,9 +1,6 @@
 package com.atech.linksaver.ui.fragment.home
 
 import android.os.Bundle
-import android.view.ActionMode
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import android.widget.CheckBox
@@ -21,6 +18,7 @@ import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentHomeBinding
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
 import com.atech.linksaver.utils.DELETE_DIALOG
+import com.atech.linksaver.utils.addOnContextualMenuListener
 import com.atech.linksaver.utils.universalDialog
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
@@ -91,50 +89,41 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun onLongClicked() {
-        val callback = object : ActionMode.Callback {
-            override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-                val inflater = mode?.menuInflater
-                inflater?.inflate(R.menu.contextual_action_bar, menu)
-                return true
+        val callback = addOnContextualMenuListener(onCreate = { mode, menu ->
+            val inflater = mode?.menuInflater
+            inflater?.inflate(R.menu.contextual_action_bar, menu)
+            menu?.findItem(R.id.menu_remove_to_archive)?.isVisible = false
+            true
+        }, onPrepare = { _, _ ->
+            binding.searchBar.isInvisible = true
+            binding.fab.hide()
+            binding.bottomAppBar.performHide()
+            false
+        }, onActionItemClicked = { _, item ->
+            when (item?.itemId) {
+                R.id.menu_delete -> handleDelete()
+                R.id.menu_add_to_archive -> addToArchive()
+                else -> false
             }
-
-            override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-                binding.searchBar.isInvisible = true
-                binding.fab.hide()
-                binding.bottomAppBar.performHide()
-                return false
-            }
-
-            override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-                return when (item?.itemId) {
-                    R.id.menu_delete -> handleDelete()
-                    R.id.menu_add_to_archive -> addToArchive()
-                    else -> false
-                }
-            }
-
-            override fun onDestroyActionMode(mode: ActionMode?) {
-                binding.fab.show()
-                selectedItem.value = hashSetOf()
-                binding.bottomAppBar.performShow()
-                homeAdapter.setLongClick(false)
-                binding.searchBar.isInvisible = false
-                mode?.finish()
-            }
-
-        }
+        }, onDestroy = { mode ->
+            binding.fab.show()
+            selectedItem.value = hashSetOf()
+            binding.bottomAppBar.performShow()
+            homeAdapter.setLongClick(false)
+            binding.searchBar.isInvisible = false
+            mode?.finish()
+        })
         val action = requireActivity().startActionMode(callback)
         selectedItem.observe(viewLifecycleOwner) {
             action?.menu?.findItem(R.id.menu_delete)?.isVisible = it.isNotEmpty()
-            action?.menu?.findItem(R.id.menu_archive)?.isVisible = it.isNotEmpty()
+            action?.menu?.findItem(R.id.menu_add_to_archive)?.isVisible = it.isNotEmpty()
             action?.title = it.size.toString()
         }
     }
 
     private fun addToArchive(): Boolean {
-        selectedItem.value?.let {
-            viewModel.archiveLinks(it.toList())
-        }
+        viewModel.archiveLinks(selectedItem.value?.toList() ?: emptyList())
+        selectedItem.value = hashSetOf()
         return true
     }
 

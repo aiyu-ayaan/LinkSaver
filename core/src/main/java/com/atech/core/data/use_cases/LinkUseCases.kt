@@ -1,6 +1,5 @@
 package com.atech.core.data.use_cases
 
-import android.util.Log
 import com.atech.core.data.database.LinkDao
 import com.atech.core.data.model.LinkModel
 import com.atech.core.util.loadImageCallback
@@ -84,11 +83,9 @@ class UpdateIsDeleted @Inject constructor(
             linkModel.copy(
                 isDeleted = !linkModel.isDeleted,
                 isArchive = false,
-                deletedAt = if (linkModel.isDeleted) System.currentTimeMillis() else null
+                deletedAt = if (linkModel.isDeleted) null else System.currentTimeMillis()
             )
-        ).let {
-            Log.d("AAA", "invoke: $it")
-        }
+        )
     }
 }
 
