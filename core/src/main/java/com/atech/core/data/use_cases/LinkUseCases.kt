@@ -22,7 +22,7 @@ data class LinkUseCases @Inject constructor(
     val deletePermanent: DeletePermanent,
     val deleteAllLinks: DeleteAllLinks,
     val autoDeleteIn30Days: AutoDeleteIn30Days,
-    val searchLink: SearchLink
+    val searchLink: SearchLink,
 )
 
 
@@ -42,8 +42,7 @@ class InsertLink @Inject constructor(
 ) {
     suspend operator fun invoke(
         link: String,
-
-        ) {
+    ) {
         val linkModel = loadImageCallback(link)
         dao.insertLink(linkModel)
     }

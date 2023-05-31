@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import com.atech.core.data.use_cases.LinkUseCases
 import com.atech.core.util.isLink
 import com.atech.linksaver.databinding.BottomSheetAddBinding
@@ -16,6 +17,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddBottomSheetFragment : BottomSheetDialogFragment() {
+
+    private val args: AddBottomSheetFragmentArgs by navArgs()
+
     private lateinit var binding: BottomSheetAddBinding
 
     @Inject
@@ -25,8 +29,8 @@ class AddBottomSheetFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = BottomSheetAddBinding.inflate(layoutInflater)
-
         binding.apply {
+            binding.textInputLayoutLink.editText?.setText(args.url)
             context?.openKeyboard(binding.textInputLayoutLink.editText!!)
             binding.materialDone.setOnClickListener {
                 val link = binding.textInputLayoutLink.editText?.text.toString()
@@ -46,9 +50,15 @@ class AddBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun addLink(link: String) = launchWhenStarted {
-        testCases.insertLink.invoke(
-            link
-        )
+//        if (args.fromIntent)
+//            testCases.insertFromIntent.invoke(
+//                link
+//            )
+//        else
+            testCases.insertLink.invoke(
+                link
+            )
+
         context?.closeKeyboard(binding.textInputLayoutLink.editText!!)
         dismiss()
     }

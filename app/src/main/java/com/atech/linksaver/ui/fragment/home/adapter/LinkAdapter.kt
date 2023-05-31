@@ -54,7 +54,7 @@ class LinkAdapter(
                 }
             }
             binding.root.setOnLongClickListener {
-                if (isLongClickable) return@setOnLongClickListener false
+                if (!isLongClickable) return@setOnLongClickListener false
                 if (isLongClickEnable) return@setOnLongClickListener false
                 changeOnLongClickState()
                 isLongClickEnable = true

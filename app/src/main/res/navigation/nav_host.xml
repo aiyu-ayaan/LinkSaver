@@ -9,10 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.atech.linksaver.ui.fragment.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_addBottomSheetFragment"
-            app:destination="@id/addBottomSheetFragment" />
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
@@ -27,12 +24,21 @@
         android:id="@+id/addBottomSheetFragment"
         android:name="com.atech.linksaver.ui.fragment.add.AddBottomSheetFragment"
         android:label="bottom_sheet_add"
-        tools:layout="@layout/bottom_sheet_add" />
+
+        tools:layout="@layout/bottom_sheet_add">
+        <argument
+            android:name="url"
+            app:argType="string" />
+        <argument
+            android:name="fromIntent"
+            app:argType="boolean"
+           />
+    </dialog>
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.atech.linksaver.ui.fragment.detail.DetailFragment"
         android:label="fragment_link_details"
-        tools:layout="@layout/fragment_link_details" >
+        tools:layout="@layout/fragment_link_details">
         <argument
             android:name="link"
             app:argType="com.atech.core.data.model.LinkModel" />
@@ -41,7 +47,7 @@
         android:id="@+id/archiveFragment"
         android:name="com.atech.linksaver.ui.fragment.archive.ArchiveFragment"
         android:label="fragment_archive"
-        tools:layout="@layout/fragment_archive" >
+        tools:layout="@layout/fragment_archive">
         <action
             android:id="@+id/action_archiveFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
@@ -50,9 +56,10 @@
         android:id="@+id/binFragment"
         android:name="com.atech.linksaver.ui.fragment.bin.BinFragment"
         android:label="fragment_bin"
-        tools:layout="@layout/fragment_bin" >
+        tools:layout="@layout/fragment_bin">
         <action
             android:id="@+id/action_binFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
     </fragment>
+    <action android:id="@+id/action_global_addBottomSheetFragment" app:destination="@id/addBottomSheetFragment" />
 </navigation>

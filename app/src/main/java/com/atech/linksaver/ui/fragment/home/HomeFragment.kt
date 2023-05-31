@@ -1,6 +1,7 @@
 package com.atech.linksaver.ui.fragment.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import android.widget.CheckBox
@@ -19,10 +20,12 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atech.core.data.model.LinkModel
+import com.atech.core.util.loadImageCallback
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentHomeBinding
 import com.atech.linksaver.ui.fragment.home.HomeViewModel.Companion.DEFAULT_QUERY
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
+import com.atech.linksaver.ui.main_activity.MainActivity.Companion.TAG
 import com.atech.linksaver.utils.DELETE_DIALOG
 import com.atech.linksaver.utils.addOnContextualMenuListener
 import com.atech.linksaver.utils.universalDialog
@@ -30,6 +33,7 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.android.material.transition.platform.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -115,7 +119,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun FragmentHomeBinding.setFab() {
         fab.setOnClickListener {
             findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToAddBottomSheetFragment()
+                HomeFragmentDirections.actionGlobalAddBottomSheetFragment("", false)
             )
         }
     }
@@ -217,12 +221,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+
+
     //    ----------------------------- SearchView------------------------------------------------------
     private fun FragmentHomeBinding.setSearchRecyclerView() {
         setSearchView()
         val searchAdapter = LinkAdapter(
-            onItemClicked = ::setClickLogic,
-            isLongClickable = false
+            onItemClicked = ::setClickLogic, isLongClickable = false
         )
         searchBarExt.apply {
             recyclerViewSearch.apply {
@@ -239,10 +244,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun FragmentHomeBinding.setSearchView() {
         searchView.editText.doOnTextChanged { text, _, _, _ ->
-            if (text?.isEmpty() == true)
-                viewModel.query.value = DEFAULT_QUERY
-            else
-                viewModel.query.value = text.toString()
+            if (text?.isEmpty() == true) viewModel.query.value = DEFAULT_QUERY
+            else viewModel.query.value = text.toString()
         }
     }
+
 }
