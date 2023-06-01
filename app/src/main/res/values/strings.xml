@@ -18,4 +18,6 @@
     <string name="unarchive">Unarchive</string>
     <string name="info">Info</string>
     <string name="auto_delete">"Auto delete in 30 days !! "</string>
+    <string name="settings">Setting</string>
+    <string name="about">About</string>
 </resources>

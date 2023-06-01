@@ -15,4 +15,10 @@
         android:title="@string/bin"
         app:showAsAction="ifRoom" />
 
+<!--    <item-->
+<!--        android:id="@+id/menu_about"-->
+<!--        android:icon="@drawable/outline_info_24"-->
+<!--        android:title="@string/about"-->
+<!--        app:showAsAction="ifRoom" />-->
+
 </menu>

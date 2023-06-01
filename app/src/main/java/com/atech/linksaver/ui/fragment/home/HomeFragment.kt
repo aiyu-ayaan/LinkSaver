@@ -1,7 +1,5 @@
 package com.atech.linksaver.ui.fragment.home
 
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
@@ -20,10 +18,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.BackoffPolicy
-import androidx.work.Constraints
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.atech.core.data.model.LinkModel
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentHomeBinding
@@ -32,13 +26,10 @@ import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
 import com.atech.linksaver.utils.DELETE_DIALOG
 import com.atech.linksaver.utils.addOnContextualMenuListener
 import com.atech.linksaver.utils.universalDialog
-import com.atech.linksaver.work_manager.LoadImageManager
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.android.material.transition.platform.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Duration
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -64,7 +55,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         observeViewList()
         backButton()
     }
-
 
 
     private fun backButton() {
@@ -96,9 +86,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             when (it.itemId) {
                 R.id.menu_archive -> navigateToArchive()
                 R.id.menu_bin -> navigateToBin()
+//                R.id.menu_about -> navigateToAbout()
                 else -> false
             }
         }
+    }
+
+    private fun navigateToAbout(): Boolean {
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        val action = HomeFragmentDirections.actionHomeFragmentToAboutFragment()
+        findNavController().navigate(action)
+        return true
     }
 
     private fun navigateToBin(): Boolean {

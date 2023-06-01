@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_homeFragment_to_binFragment"
             app:destination="@id/binFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
     </fragment>
     <dialog
         android:id="@+id/addBottomSheetFragment"
@@ -62,4 +65,9 @@
             app:destination="@id/detailFragment" />
     </fragment>
     <action android:id="@+id/action_global_addBottomSheetFragment" app:destination="@id/addBottomSheetFragment" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.atech.linksaver.ui.fragment.setting.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
 </navigation>

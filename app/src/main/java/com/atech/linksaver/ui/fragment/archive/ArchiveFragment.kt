@@ -86,7 +86,7 @@ class ArchiveFragment : Fragment(R.layout.fragment_archive) {
             val inflater = mode?.menuInflater
             inflater?.inflate(R.menu.contextual_action_bar, menu)
             menu?.findItem(R.id.menu_add_to_archive)?.isVisible = false
-            menu?.findItem(R.id.menu_restore)?.isVisible = true
+            menu?.findItem(R.id.menu_restore)?.isVisible = false
             true
         }, onActionItemClicked = { _, item ->
             when (item?.itemId) {
