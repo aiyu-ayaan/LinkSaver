@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.constraintlayout)
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.common)
     kapt(libs.hilt.android.compiler)
 
     implementation(libs.navigation.fragment.ktx)
@@ -60,6 +61,8 @@ dependencies {
     implementation(libs.android.viewbinding)
     implementation(libs.coil)
     implementation(libs.coil.svg)
+    implementation(libs.work.manager.ktx)
+    implementation(libs.splash.screen.ktx)
 
 }
 

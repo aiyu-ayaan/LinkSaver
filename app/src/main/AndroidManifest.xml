@@ -15,18 +15,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
         android:theme="@style/Theme.LinkSaver"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main_activity.MainActivity"
+            android:name="com.atech.linksaver.ui.SplashScreen"
             android:exported="true"
-            android:launchMode="singleInstance">
-            <intent-filter>
+            android:theme="@style/Theme.customSplash">
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.main_activity.MainActivity"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -35,6 +39,11 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
     </application>
 
 </manifest>

@@ -15,13 +15,14 @@ import kotlinx.parcelize.Parcelize
 data class LinkModel(
     @PrimaryKey(autoGenerate = false)
     val url: String,
-    val title: String?,
+    val title: String? = null,
     val description: String? = null,
     val icon: String? = null,
     val thumbnail: String? = null,
     val isArchive: Boolean = false,
     val isDeleted: Boolean = false,
     val deletedAt: Long? = null,
+    val isThumbnailLoaded: Boolean = false,
     val created: Long = System.currentTimeMillis()
 ) : Parcelable {
     @get:Ignore

@@ -1,8 +1,8 @@
 package com.atech.core.data.use_cases
 
+import android.util.Log
 import com.atech.core.data.database.LinkDao
 import com.atech.core.data.model.LinkModel
-import com.atech.core.util.loadImageCallback
 import javax.inject.Inject
 
 
@@ -23,6 +23,8 @@ data class LinkUseCases @Inject constructor(
     val deleteAllLinks: DeleteAllLinks,
     val autoDeleteIn30Days: AutoDeleteIn30Days,
     val searchLink: SearchLink,
+    val getAllLinksNotLoaded: GetAllLinksNotLoaded,
+    val updateIsThumbnailLoaded: UpdateIsThumbnailLoaded
 )
 
 
@@ -43,8 +45,11 @@ class InsertLink @Inject constructor(
     suspend operator fun invoke(
         link: String,
     ) {
-        val linkModel = loadImageCallback(link)
-        dao.insertLink(linkModel)
+        dao.insertLink(
+            LinkModel(
+                url = link,
+            )
+        )
     }
 }
 
@@ -58,9 +63,14 @@ class UpdateLink @Inject constructor(
     ) {
         if (link == old.url)
             return
-        val linkModel = loadImageCallback(link)
         dao.deleteLink(old)
-        dao.insertLink(linkModel.copy(created = old.created))
+        dao.insertLink(
+            old.copy(
+                url = link,
+                created = old.created,
+                isThumbnailLoaded = false
+            )
+        )
     }
 }
 
@@ -122,4 +132,25 @@ class SearchLink @Inject constructor(
     operator fun invoke(query: String) =
         doa.getSearchResult(query)
 
+}
+
+
+class GetAllLinksNotLoaded @Inject constructor(
+    private val doa: LinkDao
+) {
+    operator fun invoke() =
+        doa.getAllLinksNotLoaded()
+
+}
+
+class UpdateIsThumbnailLoaded @Inject constructor(
+    private val doa: LinkDao
+) {
+    suspend operator fun invoke(
+        linkModel: LinkModel
+    ) {
+        doa.updateLink(linkModel.copy(isThumbnailLoaded = true)).let {
+            Log.d("AAA", "UpdateIsThumbnailLoaded: $it")
+        }
+    }
 }

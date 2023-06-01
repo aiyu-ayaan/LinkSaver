@@ -1,7 +1,8 @@
 package com.atech.linksaver.ui.fragment.home
 
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import android.widget.CheckBox
@@ -19,21 +20,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.atech.core.data.model.LinkModel
-import com.atech.core.util.loadImageCallback
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentHomeBinding
 import com.atech.linksaver.ui.fragment.home.HomeViewModel.Companion.DEFAULT_QUERY
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
-import com.atech.linksaver.ui.main_activity.MainActivity.Companion.TAG
 import com.atech.linksaver.utils.DELETE_DIALOG
 import com.atech.linksaver.utils.addOnContextualMenuListener
 import com.atech.linksaver.utils.universalDialog
+import com.atech.linksaver.work_manager.LoadImageManager
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.android.material.transition.platform.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -59,6 +64,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         observeViewList()
         backButton()
     }
+
+
 
     private fun backButton() {
         viewLifecycleOwnerLiveData.observe(viewLifecycleOwner) { viewLifecycleOwner ->
@@ -220,7 +227,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.emptyImage.isVisible = it.isEmpty()
         }
     }
-
 
 
     //    ----------------------------- SearchView------------------------------------------------------

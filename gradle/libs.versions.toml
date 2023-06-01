@@ -14,7 +14,8 @@ material = "1.9.0"
 constraintlayout = "2.1.4"
 room-compiler = "2.5.1"
 room-ktx = "2.5.1"
-url-imageloader = "1.0.4.1"
+url-imageloader = "1.0.5"
+work-manager-ktx = "2.8.1"
 
 [libraries]
 android-viewbinding = { module = "com.github.yogacp:android-viewbinding", version.ref = "android-viewbinding" }
@@ -32,6 +33,9 @@ navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-compiler" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-ktx" }
 url-imageloader = { module = "com.github.aiyu-ayaan:url-imageloader", version.ref = "url-imageloader" }
+work-manager-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work-manager-ktx" }
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version = "1.0.0" }
+splash-screen-ktx = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
 
 
 [plugins]

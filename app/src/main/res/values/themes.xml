@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.LinkSaver" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -9,4 +9,10 @@
     </style>
 
     <style name="Theme.LinkSaver" parent="Base.Theme.LinkSaver" />
+
+    <style name="Theme.customSplash" parent="Theme.SplashScreen">
+        <item name="backgroundColor">?attr/colorSurface</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.LinkSaver</item>
+    </style>
 </resources>

@@ -6,4 +6,9 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeCloseDrawable">@drawable/round_close_24</item>
     </style>
+    <style name="Theme.customSplash" parent="Theme.SplashScreen">
+        <item name="backgroundColor">?attr/colorSurface</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.LinkSaver</item>
+    </style>
 </resources>
