@@ -64,6 +64,22 @@
                 tools:text="This is Link" />
 
             <TextView
+                android:id="@+id/text_view_short_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/grid_0_5"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialButton"
+                tools:text="This is Title...."
+                tools:visibility="visible" />
+
+            <TextView
                 android:id="@+id/text_view_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,7 +91,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/materialButton"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_short_title"
                 tools:text="This is Title...."
                 tools:visibility="visible" />
 

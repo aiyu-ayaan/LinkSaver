@@ -109,6 +109,12 @@ class LinkAdapter(
                     binding.textViewTitle.isVisible = true
                     binding.textViewTitle.text = title!!.trim()
                 }
+                if (shortDes.isEmpty()) {
+                    binding.textViewShortTitle.isVisible = false
+                } else {
+                    binding.textViewShortTitle.isVisible = true
+                    binding.textViewShortTitle.text = shortDes.trim()
+                }
                 if (description.isNullOrEmpty() || description == title) {
                     binding.textViewDes.isVisible = false
                 } else {
