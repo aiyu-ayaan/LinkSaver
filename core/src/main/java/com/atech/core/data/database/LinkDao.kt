@@ -44,7 +44,7 @@ interface LinkDao {
     @Query("DELETE FROM link WHERE isDeleted = 1")
     suspend fun deleteAllLinks()
 
-    @Query("DELETE FROM link WHERE isDeleted = 1 AND deletedAt >= date('now','-30 day')")
+    @Query("DELETE FROM link WHERE isDeleted = 1 AND deletedAt >= strftime('%s', 'now', '-30 day')")
     suspend fun autoDeleteIn30Days()
 
 
