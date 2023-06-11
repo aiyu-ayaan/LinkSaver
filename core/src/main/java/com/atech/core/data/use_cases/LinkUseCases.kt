@@ -125,11 +125,18 @@ class DeleteAllLinks @Inject constructor(
     }
 }
 
+@Suppress("INTEGER_OVERFLOW")
 class AutoDeleteIn30Days @Inject constructor(
     private val doa: LinkDao
 ) {
     suspend operator fun invoke() {
-        doa.autoDeleteIn30Days()
+        doa.getAllDeletedLinksOnes().filter { link ->
+            val diff = System.currentTimeMillis() - link.deletedAt!!
+            val days = diff / (24 * 60 * 60 * 1000)
+            days >= 30
+        }.forEach { link ->
+            doa.deleteLink(link)
+        }
     }
 }
 

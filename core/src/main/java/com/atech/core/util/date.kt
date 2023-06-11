@@ -1,21 +1,17 @@
 package com.atech.core.util
 
 import android.annotation.SuppressLint
-import android.os.Build
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.format.DateTimeFormatter
 import java.util.Date
-import java.util.Locale
 
 
 @SuppressLint("SimpleDateFormat")
 fun Long.convertLongToTime(format: String): String {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        DateTimeFormatter.ofPattern(format, Locale.getDefault())
-            .format(Instant.ofEpochMilli(this))
-    } else
-        SimpleDateFormat(format).format(Date(this))
+//    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//        DateTimeFormatter.ofPattern(format, Locale.getDefault())
+//            .format(Instant.ofEpochMilli(this))
+//    } else
+    return SimpleDateFormat(format).format(Date(this))
 
 }
 
