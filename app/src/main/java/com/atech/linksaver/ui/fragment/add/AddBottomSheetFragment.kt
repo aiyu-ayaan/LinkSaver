@@ -50,15 +50,11 @@ class AddBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun addLink(link: String) = launchWhenStarted {
-//        if (args.fromIntent)
-//            testCases.insertFromIntent.invoke(
-//                link
-//            )
-//        else
-            testCases.insertLink.invoke(
-                link
-            )
-
+        testCases.insertLink.invoke(
+            link,
+            if (binding.textInputLayoutShortDes.editText?.text?.isBlank() == true) " "
+            else binding.textInputLayoutShortDes.editText?.text.toString()
+        )
         context?.closeKeyboard(binding.textInputLayoutLink.editText!!)
         dismiss()
     }

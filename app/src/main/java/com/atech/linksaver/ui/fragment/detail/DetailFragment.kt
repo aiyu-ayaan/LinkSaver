@@ -95,7 +95,11 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
 
 
     private fun updateNote(link: String) = launchWhenStarted {
-        usedCases.updateLink(link, model)
+        usedCases.updateLink(
+            link to
+                    if (binding.textInputLayoutShortDescription.editText?.text?.isEmpty() == true) ""
+                    else binding.textInputLayoutShortDescription.editText?.text.toString(), model
+        )
         findNavController().navigateUp()
     }
 
@@ -111,6 +115,9 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
         textInputLayoutLink.apply {
             editText?.setText(model.url)
             editText?.requestFocus()
+        }
+        textInputLayoutShortDescription.apply {
+            editText?.setText(model.shortDes)
         }
 
         if (model.title.isNullOrEmpty()) {

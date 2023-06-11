@@ -23,7 +23,8 @@ object RoomModule {
             context,
             LinkDatabase::class.java,
             LinkDatabase.DATABASE_NAME
-        ).fallbackToDestructiveMigration()
+        ).addMigrations(LinkDatabase.migration_1_2)
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides

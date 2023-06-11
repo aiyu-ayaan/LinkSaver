@@ -15,6 +15,7 @@ import kotlinx.parcelize.Parcelize
 data class LinkModel(
     @PrimaryKey(autoGenerate = false)
     val url: String,
+    val shortDes: String,
     val title: String? = null,
     val description: String? = null,
     val icon: String? = null,

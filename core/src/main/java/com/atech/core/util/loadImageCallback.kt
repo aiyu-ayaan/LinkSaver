@@ -17,6 +17,7 @@ suspend fun loadImageCallback(link: String): LinkModel = suspendCoroutine { cont
             if (error != null) continuation.resume(
                 LinkModel(
                     url = link.makeValidUrl(),
+                    shortDes = "",
                     title = null,
                     description = null,
                     icon = null,
@@ -26,6 +27,7 @@ suspend fun loadImageCallback(link: String): LinkModel = suspendCoroutine { cont
             else continuation.resume(
                 LinkModel(
                     url = link.makeValidUrl(),
+                    shortDes = "",
                     title = details?.title,
                     description = details?.description,
                     icon = details?.iconLink,

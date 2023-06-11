@@ -7,9 +7,7 @@ import javax.inject.Inject
 
 
 enum class LinkType {
-    ALL,
-    ARCHIVE,
-    DELETED
+    ALL, ARCHIVE, DELETED
 }
 
 
@@ -43,11 +41,12 @@ class InsertLink @Inject constructor(
     private val dao: LinkDao
 ) {
     suspend operator fun invoke(
-        link: String,
+        link: String, shortDes: String
     ) {
         dao.insertLink(
             LinkModel(
                 url = link,
+                shortDes = shortDes,
             )
         )
     }
@@ -57,16 +56,24 @@ class InsertLink @Inject constructor(
 class UpdateLink @Inject constructor(
     private val dao: LinkDao
 ) {
+    /**
+     * @param date Pair<url,shortDes>
+     */
     suspend operator fun invoke(
-        link: String,
-        old: LinkModel
+        date: Pair<String, String>, old: LinkModel
     ) {
-        if (link == old.url)
+        if (date.second != old.shortDes && date.first == old.url) {
+            dao.updateLink(old.copy(shortDes = date.second))
             return
+        }
+
+        if (date.first == old.url) return
         dao.deleteLink(old)
+
         dao.insertLink(
             old.copy(
-                url = link,
+                url = date.first,
+                shortDes = date.second,
                 created = old.created,
                 isThumbnailLoaded = false
             )
@@ -129,8 +136,7 @@ class AutoDeleteIn30Days @Inject constructor(
 class SearchLink @Inject constructor(
     private val doa: LinkDao
 ) {
-    operator fun invoke(query: String) =
-        doa.getSearchResult(query)
+    operator fun invoke(query: String) = doa.getSearchResult(query)
 
 }
 
@@ -138,8 +144,7 @@ class SearchLink @Inject constructor(
 class GetAllLinksNotLoaded @Inject constructor(
     private val doa: LinkDao
 ) {
-    operator fun invoke() =
-        doa.getAllLinksNotLoaded()
+    operator fun invoke() = doa.getAllLinksNotLoaded()
 
 }
 
