@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "LinkSaver"
 include(":app")
 include(":core")
+include(":backup")

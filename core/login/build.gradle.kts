@@ -1,16 +1,10 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.com.android.library)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
-    id("com.google.dagger.hilt.android")
-    kotlin("kapt")
-    id("com.google.devtools.ksp")
-    id("kotlin-parcelize")
-    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.atech.core"
+    namespace = "com.atech.login"
     compileSdk = 33
 
     defaultConfig {
@@ -30,29 +24,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
 
-    implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
-
-    implementation(libs.url.imageloader)
-}
-
-kapt {
-    correctErrorTypes = true
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 }

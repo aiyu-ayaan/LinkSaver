@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath(libs.navigation.safe.args.gradle.plugin)
+        classpath(libs.google.services)
     }
 }
 
