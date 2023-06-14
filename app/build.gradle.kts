@@ -47,6 +47,7 @@ android {
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":backup"))
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)

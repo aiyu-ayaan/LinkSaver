@@ -6,7 +6,6 @@ plugins {
     kotlin("kapt")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
-    id("com.google.gms.google-services")
 }
 
 android {
