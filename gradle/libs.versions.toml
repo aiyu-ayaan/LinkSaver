@@ -4,6 +4,7 @@ android-viewbinding = "1.0.4"
 coil = "2.4.0"
 firebase-auth-ktx = "22.0.0"
 google-services = "4.3.15"
+google-api-services-drive =  "v3-rev20220815-2.0.0"
 hilt-android-compiler = "2.46"
 navigation-safe-args-gradle-plugin = "2.5.3"
 org-jetbrains-kotlin-android = "1.8.0"
@@ -15,7 +16,9 @@ espresso-core = "3.5.1"
 appcompat = "1.6.1"
 material = "1.9.0"
 constraintlayout = "2.1.4"
+play-serices-api = "1.32.1"
 play-services-auth = "20.5.0"
+play-services-drive = "17.0.0"
 room-compiler = "2.5.1"
 room-ktx = "2.5.1"
 url-imageloader = "1.0.5"
@@ -35,6 +38,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx"}
 google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
+google-api-services-drive = {group = "com.google.apis", name = "google-api-services-drive", version.ref = "google-api-services-drive"}
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android-compiler" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android-compiler" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -42,7 +46,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation-safe-args-gradle-plugin" }
 navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation-safe-args-gradle-plugin" }
+play-services-api = { module = "com.google.api-client:google-api-client-android", version.ref = "play-serices-api" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
+play-services-drive = { module = "com.google.android.gms:play-services-drive", version.ref = "play-services-drive" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-compiler" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-ktx" }
 url-imageloader = { module = "com.github.aiyu-ayaan:url-imageloader", version.ref = "url-imageloader" }

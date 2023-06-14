@@ -39,4 +39,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="profile">Profile</string>
+    <string name="back_up">BackUp</string>
+    <string name="back_up_settings">Back Settings</string>
 </resources>

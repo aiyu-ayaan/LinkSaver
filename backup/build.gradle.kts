@@ -27,6 +27,9 @@ android {
             )
         }
     }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -46,7 +49,11 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+
+    implementation(libs.play.services.api)
     implementation(libs.play.services.auth)
+    implementation(libs.play.services.drive)
+    implementation(libs.google.api.services.drive)
 }
 
 kapt {

@@ -11,6 +11,7 @@ data class UserModelModel(
     val mail: String,
     val name: String,
     val profileImage: String,
+    val backUpFolderPath: String? = null,
     val created: Long = System.currentTimeMillis(),
 ) : Parcelable
 
@@ -21,5 +22,6 @@ data class GetUserModel(
     val mail: String? = null,
     val name: String? = null,
     val profileImage: String? = null,
+    val backUpFolderPath: String? = null,
     val created: Long? = null,
 ) : Parcelable

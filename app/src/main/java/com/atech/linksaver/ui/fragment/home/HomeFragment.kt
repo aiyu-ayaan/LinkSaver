@@ -1,5 +1,6 @@
 package com.atech.linksaver.ui.fragment.home
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,8 +10,8 @@ import android.viewbinding.library.fragment.viewBinding
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.doOnPreDraw
@@ -28,6 +29,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.atech.backup.backup.LinkSaverDriveManager
 import com.atech.core.data.model.LinkModel
 import com.atech.core.util.openLink
 import com.atech.linksaver.R
@@ -42,6 +44,7 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.android.material.transition.platform.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -101,11 +104,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.menu_profile -> {
-                        Toast.makeText(requireContext(), "Click !!", Toast.LENGTH_SHORT).show()
-                        true
-                    }
-
                     else -> false
                 }
             }
@@ -142,11 +140,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     true
                 }
 
+                R.id.menu_backup -> navigateToBackUp()
+
                 R.id.menu_logout -> perFormSignOut()
 
                 else -> false
             }
         }
+    }
+
+    private fun navigateToBackUp(): Boolean {
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Y, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Y, false)
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToBackUpFragment()
+        )
+        return true
     }
 
     private fun perFormSignOut(): Boolean {
@@ -170,7 +179,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun backButton() {
         viewLifecycleOwnerLiveData.observe(viewLifecycleOwner) { viewLifecycleOwner ->
             viewLifecycleOwner.lifecycle.addObserver(object : LifecycleEventObserver {
-                override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                override fun onStateChanged(
+                    source: LifecycleOwner,
+                    event: Lifecycle.Event
+                ) {
                     if (event == Lifecycle.Event.ON_DESTROY) {
                         viewLifecycleOwner.lifecycle.removeObserver(this)
                         return
@@ -229,7 +241,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun changeStatusBarColor() {
         val windows = requireActivity().window
         windows.statusBarColor =
-            MaterialColors.getColor(requireView(), android.viewbinding.library.R.attr.colorSurface)
+            MaterialColors.getColor(
+                requireView(),
+                android.viewbinding.library.R.attr.colorSurface
+            )
     }
 
     private fun FragmentHomeBinding.setFab() {

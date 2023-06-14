@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_homeFragment_to_logInFragment"
             app:destination="@id/logInFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_backUpFragment"
+            app:destination="@id/backUpFragment" />
     </fragment>
     <dialog
         android:id="@+id/addBottomSheetFragment"
@@ -84,4 +87,9 @@
             app:popUpTo="@id/nav_host"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/backUpFragment"
+        android:name="com.atech.linksaver.ui.fragment.backup.BackUpFragment"
+        android:label="fragment_backup"
+        tools:layout="@layout/fragment_backup" />
 </navigation>

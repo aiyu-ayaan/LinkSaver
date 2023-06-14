@@ -52,6 +52,16 @@ class LogInRepository @Inject constructor(
         )
     }
 
+    fun updateFolderPath(path: String, onComplete: (Exception?) -> Unit = {}) {
+        val currentUser = auth.currentUser
+        currentUser?.let {
+            fireStore.collection("users").document(it.uid).update("backUpFolderPath", path)
+                .addOnSuccessListener {
+                    onComplete.invoke(null)
+                }.addOnFailureListener(onComplete::invoke)
+        }
+    }
+
     fun logOut(customAction: () -> Unit = {}) {
         auth.signOut()
         googleSignInClient.signOut()
