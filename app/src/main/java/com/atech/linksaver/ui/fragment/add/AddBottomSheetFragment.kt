@@ -31,7 +31,13 @@ class AddBottomSheetFragment : BottomSheetDialogFragment() {
         binding = BottomSheetAddBinding.inflate(layoutInflater)
         binding.apply {
             binding.textInputLayoutLink.editText?.setText(args.url)
-            context?.openKeyboard(binding.textInputLayoutLink.editText!!)
+            context?.openKeyboard(
+                if (args.fromIntent) {
+                    binding.textInputLayoutShortDes.requestFocus()
+                    binding.textInputLayoutShortDes.editText!!
+                } else
+                    binding.textInputLayoutLink.editText!!
+            )
             binding.materialDone.setOnClickListener {
                 val link = binding.textInputLayoutLink.editText?.text.toString()
                 if (link.isEmpty()) {
@@ -61,7 +67,12 @@ class AddBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun BottomSheetAddBinding.closeButton() {
         materialClose.setOnClickListener {
-            context?.closeKeyboard(binding.textInputLayoutLink.editText!!)
+            context?.closeKeyboard(
+                if (args.fromIntent)
+                    binding.textInputLayoutShortDes.editText!!
+                else
+                    binding.textInputLayoutLink.editText!!
+            )
             dismiss()
         }
     }

@@ -39,10 +39,10 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/materialButton"
                 style="?attr/materialIconButtonFilledStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?colorSurface"
-                app:icon="@drawable/round_open_in_new_24"
+                app:icon="@drawable/outline_edit_24"
                 app:iconTint="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

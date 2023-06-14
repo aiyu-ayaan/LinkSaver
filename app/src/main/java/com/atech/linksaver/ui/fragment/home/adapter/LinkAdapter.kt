@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.atech.core.data.model.LinkDiffCallback
 import com.atech.core.data.model.LinkModel
-import com.atech.core.util.openLink
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.RowLinksBinding
 import com.atech.linksaver.utils.loadIcon
@@ -19,8 +19,10 @@ import com.atech.linksaver.utils.loadImage
 
 class LinkAdapter(
     private val onItemLongClicked: () -> Unit = { },
-    private val onItemClicked: (Pair<LinkModel, View>, Boolean, CheckBox) -> Unit = { _, _, _ -> },
+    private val onItemClicked: (LinkModel, Boolean, CheckBox) -> Unit = { _, _, _ -> },
     private val isLongClickable: Boolean = true,
+    private val onEditClick: (Pair<LinkModel, View>) -> Unit = {},
+    private val isEditEnable: Boolean = true
 ) : ListAdapter<LinkModel, LinkAdapter.LinkViewHolder>(LinkDiffCallback()) {
 
     private var isLongClickEnable = false
@@ -46,7 +48,7 @@ class LinkAdapter(
                 adapterPosition.let { position ->
                     if (position != RecyclerView.NO_POSITION) {
                         onItemClicked(
-                            getItem(position) to binding.root,
+                            getItem(position),
                             isLongClickEnable,
                             binding.checkBox
                         )
@@ -61,7 +63,7 @@ class LinkAdapter(
                 adapterPosition.let { position ->
                     if (position != RecyclerView.NO_POSITION) {
                         onItemClicked(
-                            getItem(position) to binding.root,
+                            getItem(position),
                             isLongClickEnable,
                             binding.checkBox
                         )
@@ -70,11 +72,16 @@ class LinkAdapter(
                 }
                 true
             }
-            binding.materialButton.setOnClickListener {
-                adapterPosition.let { position ->
-                    if (position != RecyclerView.NO_POSITION) {
-                        getItem(position).let { linkModel ->
-                            binding.root.context.openLink(linkModel.url)
+            binding.materialButton.apply {
+                if (!isEditEnable) {
+                  width = resources.getDimensionPixelSize(R.dimen._0sdp)
+                    isInvisible = true
+                    return@apply
+                }
+                setOnClickListener {
+                    adapterPosition.let { position ->
+                        if (position != RecyclerView.NO_POSITION) {
+                            onEditClick(getItem(position) to binding.root)
                         }
                     }
                 }

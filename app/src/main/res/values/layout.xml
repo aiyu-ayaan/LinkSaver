@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="_0sdp">1sp</dimen>
     <dimen name="grid_0_25">2dp</dimen>
     <dimen name="grid_0_5">4dp</dimen>
 

@@ -20,6 +20,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atech.core.data.model.LinkModel
+import com.atech.core.util.openLink
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentBinBinding
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
@@ -73,7 +74,9 @@ class BinFragment : Fragment(R.layout.fragment_bin) {
     private fun FragmentBinBinding.setRecyclerView() {
         recyclerView.apply {
             adapter = LinkAdapter(
-                onItemLongClicked = ::onLongClicked, onItemClicked = ::setClickLogic
+                onItemLongClicked = ::onLongClicked,
+                onItemClicked = ::setClickLogic,
+                isEditEnable = false,
             ).also { homeAdapter = it }
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
@@ -82,21 +85,21 @@ class BinFragment : Fragment(R.layout.fragment_bin) {
     }
 
     private fun setClickLogic(
-        m: Pair<LinkModel, View>, isLongClick: Boolean, checkBox: CheckBox
+        m: LinkModel, isLongClick: Boolean, checkBox: CheckBox
     ) {
         if (isLongClick) {
             selectedItem.value = selectedItem.value?.apply {
-                if (contains(m.first)) {
+                if (contains(m)) {
                     checkBox.isChecked = false
                     checkBox.isVisible = false
-                    remove(m.first)
+                    remove(m)
                 } else {
-                    add(m.first)
+                    add(m)
                 }
-            } ?: hashSetOf(m.first)
+            } ?: hashSetOf(m)
             return
         }
-        navigateToDetailFragment(m)
+        context?.openLink(m.url)
     }
 
     private fun navigateToDetailFragment(m: Pair<LinkModel, View>) {

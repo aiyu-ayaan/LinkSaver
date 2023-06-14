@@ -13,6 +13,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.atech.core.data.model.LinkModel
+import com.atech.core.util.openLink
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentArchiveBinding
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
@@ -53,7 +54,8 @@ class ArchiveFragment : Fragment(R.layout.fragment_archive) {
         binding.recyclerView.apply {
             adapter = LinkAdapter(
                 onItemLongClicked = ::onLongClicked,
-                onItemClicked = ::setClickLogic
+                onItemClicked = ::setClickLogic,
+                onEditClick = ::navigateToDetailFragment
             ).also {
                 archiveAdapter = it
             }
@@ -64,21 +66,21 @@ class ArchiveFragment : Fragment(R.layout.fragment_archive) {
     }
 
     private fun setClickLogic(
-        m: Pair<LinkModel, View>, isLongClick: Boolean, checkBox: CheckBox
+        m: LinkModel, isLongClick: Boolean, checkBox: CheckBox
     ) {
         if (isLongClick) {
             selectedItem.value = selectedItem.value?.apply {
-                if (contains(m.first)) {
+                if (contains(m)) {
                     checkBox.isChecked = false
                     checkBox.isVisible = false
-                    remove(m.first)
+                    remove(m)
                 } else {
-                    add(m.first)
+                    add(m)
                 }
-            } ?: hashSetOf(m.first)
+            } ?: hashSetOf(m)
             return
         }
-        navigateToDetailFragment(m)
+        context?.openLink(m.url)
     }
 
     private fun onLongClicked() {
