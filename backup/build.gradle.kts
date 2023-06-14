@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.play.services.drive)
     implementation(libs.google.api.services.drive)
+
+    implementation(libs.converter.gson)
 }
 
 kapt {

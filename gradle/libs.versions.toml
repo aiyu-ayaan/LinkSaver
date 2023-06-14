@@ -33,6 +33,7 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+converter-gson = { module = "com.google.code.gson:gson", version = "2.10.1" }
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }

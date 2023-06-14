@@ -56,11 +56,31 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             setToolbar()
-            switchBackup.apply {
-                isChecked = getFolderID() != null
-                setOnCheckedChangeListener { _, state ->
-                    if (state) performBackup()
-                }
+            setSwitch()
+            binding.btnBackup.setOnClickListener {
+                performBackup()
+            }
+        }
+    }
+
+    private fun performBackup() = lifecycleScope.launch(Dispatchers.IO) {
+        val content = viewModel.getAllLinks()
+        viewModel.uploadFile(
+            content,
+            getFolderID()!!,
+            onFail = {
+                Log.e(TAG, "performBackup Error : ${it.message}")
+            }
+        ) {
+            Log.d(TAG, "performBackup: $it")
+        }
+    }
+
+    private fun FragmentBackupBinding.setSwitch() {
+        switchBackup.apply {
+            isChecked = getFolderID() != null
+            setOnCheckedChangeListener { _, state ->
+                if (state) performCreateBackup()
             }
         }
     }
@@ -69,7 +89,7 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
         pref.getString(KEY_BACK_UP_FOLDER_ID, null)
 
 
-    private fun performBackup() = lifecycleScope.launch(Dispatchers.IO) {
+    private fun performCreateBackup() = lifecycleScope.launch(Dispatchers.IO) {
         if (getFolderID() != null) {
             Log.d(TAG, "performBackup: ${getFolderID()}")
             return@launch

@@ -22,7 +22,8 @@ data class LinkUseCases @Inject constructor(
     val autoDeleteIn30Days: AutoDeleteIn30Days,
     val searchLink: SearchLink,
     val getAllLinksNotLoaded: GetAllLinksNotLoaded,
-    val updateIsThumbnailLoaded: UpdateIsThumbnailLoaded
+    val updateIsThumbnailLoaded: UpdateIsThumbnailLoaded,
+    val getAllLinksForOnes: GetAllLinksForOnes
 )
 
 
@@ -165,4 +166,10 @@ class UpdateIsThumbnailLoaded @Inject constructor(
             Log.d("AAA", "UpdateIsThumbnailLoaded: $it")
         }
     }
+}
+
+class GetAllLinksForOnes @Inject constructor(
+    private val doa: LinkDao
+) {
+    operator fun invoke() = doa.getAllLinksOnes()
 }

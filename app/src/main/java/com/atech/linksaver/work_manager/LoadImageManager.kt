@@ -40,7 +40,7 @@ class LoadImageManager @AssistedInject constructor(
             }
             return Result.success()
         } catch (e: Exception) {
-            Log.d(TAG, "doWork error : ${e.message}")
+            Log.e(TAG, "doWork error : ${e.message}")
             return Result.failure()
         }
 

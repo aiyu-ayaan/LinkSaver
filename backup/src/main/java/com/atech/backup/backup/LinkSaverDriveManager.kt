@@ -2,8 +2,11 @@ package com.atech.backup.backup
 
 import android.content.Intent
 import android.util.Log
+import com.atech.backup.backup.MimeType.JSON
+import com.atech.backup.utils.BACK_UP_FILE_NAME
 import com.atech.backup.utils.BACK_UP_FOLDER_NAME
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
+import com.google.api.client.http.ByteArrayContent
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 import javax.inject.Inject
@@ -12,6 +15,7 @@ import javax.inject.Singleton
 private const val TAG = "LinkSaverDriveManager"
 
 private object MimeType {
+    const val JSON: String = "application/json"
     const val FOLDER = "application/vnd.google-apps.folder"
 }
 
@@ -49,28 +53,43 @@ class LinkSaverDriveManager @Inject constructor(
     }
 
     fun uploadFile(
-        file: java.io.File,
-        type: String,
-        folderId: String
-    ): File? {
-        drive?.let {
+        jsonData: String,
+        folderId: String,
+        onFail: (Exception) -> Unit = {},
+        onSuccess: (FileData) -> Unit = {}
+    ) {
+        drive!!.let {
             try {
                 val fileMetadata = File()
                     .setParents(listOf(folderId))
-                    .setMimeType(type)
-                    .setName(file.name)
-                val mediaContent = com.google.api.client.http.FileContent(type, file)
+                    .setMimeType(JSON)
+                    .setName(BACK_UP_FILE_NAME)
 
-                return it.files().create(fileMetadata, mediaContent).execute().also { file ->
+                val byteArrayContent = ByteArrayContent.fromString(JSON, jsonData)
+                it.files().create(fileMetadata, byteArrayContent).execute().let { file ->
                     Log.d(
                         TAG,
-                        "uploadFile: File is uploaded successfully ${file.id} , ${file.name} , ${file.webContentLink} , ${file.webViewLink}"
+                        "uploadFile: File is uploaded successfully ${file.id} , ${file.name}"
+                    )
+                    onSuccess(
+                        FileData(
+                            id = file.id,
+                            name = file.name,
+                            webContentLink = file.webContentLink,
+                            webViewLink = file.webViewLink
+                        )
                     )
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "uploadFile: ", e)
+                onFail(e)
             }
         }
-        return null
     }
+
+    data class FileData(
+        val id: String?,
+        val name: String?,
+        val webContentLink: String?,
+        val webViewLink: String?
+    )
 }
