@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_github"
+        android:icon="@drawable/ic_read_me"
+        android:title="@string/git" />
+    <item
+        android:id="@+id/menu_whats_new"
+        android:icon="@drawable/ic_release_notes"
+        android:title="@string/whats_new" />
+    <item
+        android:id="@+id/menu_issue"
+        android:icon="@drawable/ic_issue"
+        android:title="@string/report" />
+<!--    <group-->
+    <!--        android:id="@+id/group_1"-->
+    <!--        android:checkableBehavior="single">-->
+    <!--        <item android:title="@string/about_app">-->
+    <!--            <menu>-->
+    <!--                <item-->
+    <!--                    android:id="@+id/menu_setting"-->
+    <!--                    android:checkable="false"-->
+    <!--                    android:icon="@drawable/round_settings_24"-->
+    <!--                    android:title="@string/settings" />-->
+    <!--            </menu>-->
+    <!--        </item>-->
+    <!--    </group>-->
+</menu>

@@ -21,4 +21,14 @@
     <string name="settings">Setting</string>
     <string name="about">About</string>
     <string name="short_description">Short Description (Optional)</string>
+    <string name="publishers_name">By Aiyu</string>
+    <string name="full_version">Version 1.0</string>
+    <string name="blank">" "</string>
+    <string name="git">Github</string>
+    <string name="whats_new">What\'s New</string>
+    <string name="report">Report</string>
+    <string name="about_app">About App</string>
+    <string name="github_link">https://github.com/aiyu-ayaan/LinkSaver</string>
+    <string name="release_link">https://github.com/aiyu-ayaan/LinkSaver/releases</string>
+    <string name="issue_link">https://github.com/aiyu-ayaan/LinkSaver/issues</string>
 </resources>

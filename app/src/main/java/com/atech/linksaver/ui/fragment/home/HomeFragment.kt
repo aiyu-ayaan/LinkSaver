@@ -5,6 +5,7 @@ import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import android.widget.CheckBox
 import androidx.activity.addCallback
+import androidx.core.view.GravityCompat
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -52,9 +53,41 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             setFab()
             handleBottomAppBar()
             setSearchRecyclerView()
+            settingDrawer()
+            handleDrawerClicks()
         }
         observeViewList()
         backButton()
+    }
+
+    private fun FragmentHomeBinding.settingDrawer() = this.apply {
+        searchBar.setNavigationOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+    }
+
+    private fun FragmentHomeBinding.handleDrawerClicks() = this.navigationView.apply {
+        setNavigationItemSelectedListener {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            when (it.itemId) {
+                R.id.menu_github -> {
+                    context?.openLink(resources.getString(R.string.github_link))
+                    true
+                }
+
+                R.id.menu_issue -> {
+                    context?.openLink(resources.getString(R.string.issue_link))
+                    true
+                }
+
+                R.id.menu_whats_new -> {
+                    context?.openLink(resources.getString(R.string.release_link))
+                    true
+                }
+
+                else -> false
+            }
+        }
     }
 
 
@@ -135,9 +168,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun FragmentHomeBinding.setRecyclerView() {
         recyclerView.apply {
             adapter = LinkAdapter(
-                ::onLongClicked,
-                ::setClickLogic,
-                onEditClick = ::navigateToDetailFragment
+                ::onLongClicked, ::setClickLogic, onEditClick = ::navigateToDetailFragment
             ).also { homeAdapter = it }
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
