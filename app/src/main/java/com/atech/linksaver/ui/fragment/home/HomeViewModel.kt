@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import com.atech.backup.login.LogInRepository
 import com.atech.core.data.model.LinkModel
-import com.atech.core.data.use_cases.LinkType
 import com.atech.core.data.use_cases.LinkUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val cases: LinkUseCases
+    private val cases: LinkUseCases,
+    private val logInRepository: LogInRepository
 ) : ViewModel() {
 
     val link = cases.getAllLinks.invoke()
@@ -40,6 +41,12 @@ class HomeViewModel @Inject constructor(
     fun autoDeleteIn30Days() = viewModelScope.launch {
         cases.autoDeleteIn30Days()
     }
+
+    fun logOut(customAction: () -> Unit = {}) = logInRepository.logOut(customAction)
+
+    fun isSignedIn() = logInRepository.isSignedIn()
+
+    fun getCurrentUser() = logInRepository.getCurrentUser()
 
     companion object {
         const val DEFAULT_QUERY = "no_query"

@@ -32,7 +32,8 @@ coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebase-auth-ktx" }
+firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx"}
 google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android-compiler" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt-android-compiler" }
@@ -51,6 +52,7 @@ splash-screen-ktx = { group = "androidx.core", name = "core-splashscreen", versi
 junit = { group = "junit", name = "junit", version.ref = "junit-junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit115" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso-espresso-core" }
+play-services-base = { group = "com.google.android.gms", name = "play-services-base", version = "18.2.0" }
 
 
 [plugins]

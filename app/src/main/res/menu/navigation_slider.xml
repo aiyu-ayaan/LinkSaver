@@ -12,17 +12,23 @@
         android:id="@+id/menu_issue"
         android:icon="@drawable/ic_issue"
         android:title="@string/report" />
-<!--    <group-->
-    <!--        android:id="@+id/group_1"-->
-    <!--        android:checkableBehavior="single">-->
-    <!--        <item android:title="@string/about_app">-->
-    <!--            <menu>-->
-    <!--                <item-->
-    <!--                    android:id="@+id/menu_setting"-->
-    <!--                    android:checkable="false"-->
-    <!--                    android:icon="@drawable/round_settings_24"-->
-    <!--                    android:title="@string/settings" />-->
-    <!--            </menu>-->
-    <!--        </item>-->
-    <!--    </group>-->
+    <group
+            android:id="@+id/group_1"
+            android:checkableBehavior="single">
+            <item android:title="@string/about_app">
+                <menu>
+<!--                    <item-->
+<!--                        android:id="@+id/menu_setting"-->
+<!--                        android:checkable="false"-->
+<!--                        android:icon="@drawable/round_settings_24"-->
+<!--                        android:title="@string/settings" />-->
+
+                    <item
+                        android:id="@+id/menu_logout"
+                        android:checkable="false"
+                        android:icon="@drawable/round_logout_24"
+                        android:title="@string/log_out" />
+                </menu>
+            </item>
+        </group>
 </menu>

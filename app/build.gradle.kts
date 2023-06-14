@@ -55,6 +55,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.common)
+    implementation(libs.play.services.base)
     kapt(libs.hilt.android.compiler)
 
     implementation(libs.navigation.fragment.ktx)
@@ -70,7 +71,8 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics.ktx)
-
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.auth.ktx)
 }
 
 kapt {

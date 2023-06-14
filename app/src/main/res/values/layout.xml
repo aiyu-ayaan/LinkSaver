@@ -22,4 +22,7 @@
         120dp
     </dimen>
     <dimen name="empty_image_size">250dp</dimen>
+
+    <dimen name="image_view_log_in_size">300dp</dimen>
+    <dimen name="user_profile_image_size_toolbar">30dp</dimen>
 </resources>

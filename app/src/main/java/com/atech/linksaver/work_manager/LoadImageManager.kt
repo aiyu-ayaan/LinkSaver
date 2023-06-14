@@ -22,10 +22,8 @@ class LoadImageManager @AssistedInject constructor(
     workerParams
 ) {
     override suspend fun doWork(): Result {
-        Log.d(TAG, "doWork: Running ")
         try {
             useCases.getAllLinksNotLoaded.invoke().collect {
-                Log.d(TAG, "doWork: $it")
                 if (it.isNotEmpty()) {
                     it.forEach { link ->
                         val linkModel = runBlocking { loadImageCallback(link.url) }
@@ -38,8 +36,7 @@ class LoadImageManager @AssistedInject constructor(
                             runBlocking { useCases.updateIsThumbnailLoaded.invoke(link) }
                         }
                     }
-                } else
-                    Log.d(TAG, "doWork: No links to load")
+                }
             }
             return Result.success()
         } catch (e: Exception) {

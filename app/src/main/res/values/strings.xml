@@ -31,4 +31,12 @@
     <string name="github_link">https://github.com/aiyu-ayaan/LinkSaver</string>
     <string name="release_link">https://github.com/aiyu-ayaan/LinkSaver/releases</string>
     <string name="issue_link">https://github.com/aiyu-ayaan/LinkSaver/issues</string>
+    <string name="welcome_with_app_name">Welcome to Link Saver</string>
+    <string name="welcome_with_account_des">Create an account to save your saved links</string>
+    <string name="skip">Skip</string>
+    <string name="log_out">Logout</string>
+    <string name="log_out_message">Are you sure you want to sign out?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="profile">Profile</string>
 </resources>

@@ -1,11 +1,18 @@
 package com.atech.linksaver.ui.fragment.home
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import android.widget.CheckBox
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuProvider
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -19,6 +26,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.atech.core.data.model.LinkModel
 import com.atech.core.util.openLink
 import com.atech.linksaver.R
@@ -26,6 +35,7 @@ import com.atech.linksaver.databinding.FragmentHomeBinding
 import com.atech.linksaver.ui.fragment.home.HomeViewModel.Companion.DEFAULT_QUERY
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
 import com.atech.linksaver.utils.DELETE_DIALOG
+import com.atech.linksaver.utils.DialogModel
 import com.atech.linksaver.utils.addOnContextualMenuListener
 import com.atech.linksaver.utils.universalDialog
 import com.google.android.material.color.MaterialColors
@@ -42,6 +52,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var homeAdapter: LinkAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
@@ -53,14 +69,44 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             setFab()
             handleBottomAppBar()
             setSearchRecyclerView()
-            settingDrawer()
+            setToolbar()
             handleDrawerClicks()
         }
         observeViewList()
         backButton()
     }
 
-    private fun FragmentHomeBinding.settingDrawer() = this.apply {
+    private fun FragmentHomeBinding.setToolbar() = this.apply {
+        searchBar.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_toolbar, menu)
+                val searchItem = menu.findItem(R.id.menu_profile)
+                val view = searchItem.actionView as FrameLayout
+                val imageView = view.findViewById<ImageView>(R.id.toolbar_profile_image)
+                if (viewModel.isSignedIn()) {
+                    imageView.load(viewModel.getCurrentUser()?.profileImage) {
+                        crossfade(true)
+                        placeholder(R.drawable.ic_account)
+                        error(R.drawable.ic_account)
+                        transformations(CircleCropTransformation())
+                    }
+                }
+                imageView.setOnClickListener {
+                    Toast.makeText(requireContext(), "Click !!", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_profile -> {
+                        Toast.makeText(requireContext(), "Click !!", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner)
         searchBar.setNavigationOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
@@ -85,9 +131,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     true
                 }
 
+                R.id.menu_logout -> perFormSignOut()
+
                 else -> false
             }
         }
+    }
+
+    private fun perFormSignOut(): Boolean {
+        DialogModel(title = getString(R.string.log_out),
+            message = getString(R.string.log_out_message),
+            positiveText = getString(R.string.yes),
+            negativeText = getString(R.string.no),
+            positiveAction = { dialog ->
+                viewModel.logOut()
+                dialog.dismiss()
+            },
+            negativeAction = { dialog ->
+                dialog.dismiss()
+            }).let {
+            requireContext().universalDialog(it)
+        }
+        return true
     }
 
 
