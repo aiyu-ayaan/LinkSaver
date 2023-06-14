@@ -92,7 +92,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
                 imageView.setOnClickListener {
-                    Toast.makeText(requireContext(), "Click !!", Toast.LENGTH_SHORT).show()
+                    if (!viewModel.isSignedIn())
+                        navigateToLogIn().let {
+                            return@setOnClickListener
+                        }
                 }
             }
 
@@ -110,6 +113,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         searchBar.setNavigationOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
+    }
+
+    private fun navigateToLogIn() {
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        findNavController().navigate(
+            HomeFragmentDirections.actionHomeFragmentToLogInFragment()
+        )
     }
 
     private fun FragmentHomeBinding.handleDrawerClicks() = this.navigationView.apply {

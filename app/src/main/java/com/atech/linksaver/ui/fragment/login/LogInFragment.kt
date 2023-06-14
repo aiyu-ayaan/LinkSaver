@@ -28,6 +28,12 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
     lateinit var logInRepository: LogInRepository
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+    }
+
     private val activityResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             Log.d(TAG, "${it.resultCode}")
@@ -61,7 +67,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changeStatusBarColor()
-        if(logInRepository.isSignedIn()) {
+        if (logInRepository.isSignedIn()) {
             navigateToHome()
         }
         binding.apply {
