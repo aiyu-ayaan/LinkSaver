@@ -56,6 +56,7 @@ class LinkSaverDriveManager @Inject constructor(
         jsonData: String,
         folderId: String,
         onFail: (Exception) -> Unit = {},
+        onProgress: (Int) -> Unit = {},
         onSuccess: (FileData) -> Unit = {}
     ) {
         drive!!.let {
@@ -66,25 +67,62 @@ class LinkSaverDriveManager @Inject constructor(
                     .setName(BACK_UP_FILE_NAME)
 
                 val byteArrayContent = ByteArrayContent.fromString(JSON, jsonData)
-                it.files().create(fileMetadata, byteArrayContent).execute().let { file ->
-                    Log.d(
-                        TAG,
-                        "uploadFile: File is uploaded successfully ${file.id} , ${file.name}"
-                    )
-                    onSuccess(
-                        FileData(
-                            id = file.id,
-                            name = file.name,
-                            webContentLink = file.webContentLink,
-                            webViewLink = file.webViewLink
-                        )
-                    )
+                val uploader = it.files().create(fileMetadata, byteArrayContent).apply {
+                    mediaHttpUploader.isDirectUploadEnabled = false
+                    mediaHttpUploader.setProgressListener { uploader ->
+                        onProgress((uploader.progress * 100).toInt())
+                    }
                 }
+                val file = uploader.execute()
+                onSuccess(
+                    FileData(
+                        id = file.id,
+                        name = file.name,
+                        webContentLink = file.webContentLink,
+                        webViewLink = file.webViewLink
+                    )
+                )
             } catch (e: Exception) {
                 onFail(e)
             }
         }
     }
+
+    fun updateBackupFile(
+        jsonData: String,
+        fileId: String,
+        onFail: (Exception) -> Unit = {},
+        onProgress: (Int) -> Unit = {},
+        onSuccess: (FileData) -> Unit = {}
+    ) {
+        drive!!.let {
+            try {
+                val fileMetadata = File()
+                    .setMimeType(JSON)
+                    .setName(BACK_UP_FILE_NAME)
+
+                val byteArrayContent = ByteArrayContent.fromString(JSON, jsonData)
+                val uploader = it.files().update(fileId, fileMetadata, byteArrayContent).apply {
+                    mediaHttpUploader.isDirectUploadEnabled = false
+                    mediaHttpUploader.setProgressListener { uploader ->
+                        onProgress((uploader.progress * 100).toInt())
+                    }
+                }
+                val file = uploader.execute()
+                onSuccess(
+                    FileData(
+                        id = file.id,
+                        name = file.name,
+                        webContentLink = file.webContentLink,
+                        webViewLink = file.webViewLink
+                    )
+                )
+            } catch (e: Exception) {
+                onFail(e)
+            }
+        }
+    }
+
 
     data class FileData(
         val id: String?,

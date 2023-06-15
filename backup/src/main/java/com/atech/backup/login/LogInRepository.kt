@@ -52,10 +52,20 @@ class LogInRepository @Inject constructor(
         )
     }
 
-    fun updateFolderPath(path: String, onComplete: (Exception?) -> Unit = {}) {
+    fun updateFolderId(path: String, onComplete: (Exception?) -> Unit = {}) {
         val currentUser = auth.currentUser
         currentUser?.let {
-            fireStore.collection("users").document(it.uid).update("backUpFolderPath", path)
+            fireStore.collection("users").document(it.uid).update("backUpFolderId", path)
+                .addOnSuccessListener {
+                    onComplete.invoke(null)
+                }.addOnFailureListener(onComplete::invoke)
+        }
+    }
+
+    fun updateFileId(fileId: String, onComplete: (Exception?) -> Unit = {}) {
+        val currentUser = auth.currentUser
+        currentUser?.let {
+            fireStore.collection("users").document(it.uid).update("backUpFileId", fileId)
                 .addOnSuccessListener {
                     onComplete.invoke(null)
                 }.addOnFailureListener(onComplete::invoke)

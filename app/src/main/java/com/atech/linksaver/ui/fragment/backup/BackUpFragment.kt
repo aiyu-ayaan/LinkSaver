@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
 import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentBackupBinding
@@ -41,7 +42,11 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
                 }) { path ->
                     if (getFolderID() != null) return@createFolder
                     Log.d(TAG, "performBackup: $path")
-                    viewModel.updateBackupFolderPath(path)
+                    try {
+                        viewModel.updateBackupFolderIdFirebase(path)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "performBackup: ${e.message}")
+                    }
                 }
             }
         }
@@ -65,14 +70,42 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
 
     private fun performBackup() = lifecycleScope.launch(Dispatchers.IO) {
         val content = viewModel.getAllLinks()
+        if (getFileId() == null)
+            createFirstTimeBack(content)
+        else
+            updateUpload(content)
+    }
+
+    private fun updateUpload(content: String) {
+        viewModel.updateFile(
+            content, getFileId()!!,
+            onFail = {
+                Log.e(TAG, "performBackup Error : ${it.message}")
+            },
+            onProgress = {
+                Log.d(TAG, "performBackup: $it")
+            }) {
+            Log.d(TAG, "performBackup: Updated $it")
+        }
+    }
+
+    private fun createFirstTimeBack(content: String) {
         viewModel.uploadFile(
             content,
             getFolderID()!!,
             onFail = {
                 Log.e(TAG, "performBackup Error : ${it.message}")
+            },
+            onProgress = {
+                Log.d(TAG, "performBackup: $it")
             }
-        ) {
-            Log.d(TAG, "performBackup: $it")
+        ) { fileData ->
+            Log.d(TAG, "performBackup: $fileData")
+            try {
+                viewModel.updateBackupFileIdFirebase(fileData.id!!)
+            } catch (e: Exception) {
+                Log.e(TAG, "performBackup: ${e.message}")
+            }
         }
     }
 
@@ -88,6 +121,8 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
     private fun getFolderID(): String? =
         pref.getString(KEY_BACK_UP_FOLDER_ID, null)
 
+    private fun getFileId(): String? =
+        pref.getString(KEY_BACK_UP_FILE_ID, null)
 
     private fun performCreateBackup() = lifecycleScope.launch(Dispatchers.IO) {
         if (getFolderID() != null) {
@@ -101,7 +136,11 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
             activityResult.launch(it)
         }) { path ->
             Log.d(TAG, "performBackup: $path")
-            viewModel.updateBackupFolderPath(path)
+            try {
+                viewModel.updateBackupFolderIdFirebase(path)
+            } catch (e: Exception) {
+                Log.e(TAG, "performBackup: ${e.message}")
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import com.atech.backup.backup.LinkSaverDriveManager
 import com.atech.backup.backup.model.BackUpModel
 import com.atech.backup.backup.model.toJson
 import com.atech.backup.login.LogInRepository
+import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
 import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
 import com.atech.core.data.use_cases.LinkUseCases
 import com.atech.linksaver.utils.ModelConverter
@@ -47,15 +48,37 @@ class BackUpViewModel @Inject constructor(
         jsonData: String,
         folderId: String,
         onFail: (Exception) -> Unit = {},
+        onProgress: (Int) -> Unit = {},
         onComplete: (LinkSaverDriveManager.FileData) -> Unit
     ) = viewModelScope.launch(Dispatchers.IO) {
-        driveManager.uploadFile(jsonData, folderId, onFail, onComplete)
+        driveManager.uploadFile(jsonData, folderId, onFail, onProgress, onComplete)
+    }
+
+    fun updateFile(
+        jsonData: String,
+        fileId: String,
+        onFail: (Exception) -> Unit = {},
+        onProgress: (Int) -> Unit = {},
+        onComplete: (LinkSaverDriveManager.FileData) -> Unit
+    ) = viewModelScope.launch(Dispatchers.IO) {
+        driveManager.updateBackupFile(jsonData, fileId, onFail, onProgress, onComplete)
     }
 
 
-    fun updateBackupFolderPath(folderId: String) {
-        logInRepository.updateFolderPath(folderId) {
+    @Throws(Exception::class)
+    fun updateBackupFolderIdFirebase(folderId: String) {
+        logInRepository.updateFolderId(folderId) {
+            if (it != null) throw it
+
             pref.edit().putString(KEY_BACK_UP_FOLDER_ID, folderId).apply()
+        }
+    }
+
+    @Throws(Exception::class)
+    fun updateBackupFileIdFirebase(fileId: String) {
+        logInRepository.updateFileId(fileId) {
+            if (it != null) throw it
+            pref.edit().putString(KEY_BACK_UP_FILE_ID, fileId).apply()
         }
     }
 }

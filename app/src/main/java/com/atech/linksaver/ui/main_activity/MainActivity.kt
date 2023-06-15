@@ -15,7 +15,7 @@ import com.atech.core.data.use_cases.LinkUseCases
 import com.atech.linksaver.NavHostDirections
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.ActivityMainBinding
-import com.atech.linksaver.work_manager.LoadImageManager
+import com.atech.linksaver.work_manager.load_image.LoadImageManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Duration
 import java.util.concurrent.TimeUnit

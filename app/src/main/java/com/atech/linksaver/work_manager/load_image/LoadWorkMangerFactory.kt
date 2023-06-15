@@ -1,4 +1,4 @@
-package com.atech.linksaver.work_manager
+package com.atech.linksaver.work_manager.load_image
 
 import android.content.Context
 import androidx.work.ListenableWorker

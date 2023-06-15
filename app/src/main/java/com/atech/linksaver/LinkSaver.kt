@@ -2,7 +2,7 @@ package com.atech.linksaver
 
 import android.app.Application
 import androidx.work.Configuration
-import com.atech.linksaver.work_manager.LoadWorkMangerFactory
+import com.atech.linksaver.work_manager.load_image.LoadWorkMangerFactory
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
