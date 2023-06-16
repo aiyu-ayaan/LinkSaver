@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import com.atech.backup.backup.LinkSaverDriveManager
 import com.atech.backup.login.LogInRepository
 import com.atech.core.data.use_cases.LinkUseCases
+import com.atech.linksaver.utils.ModelConverter
 import javax.inject.Inject
 
 class MainWorkMangerFactory  @Inject constructor(
@@ -15,6 +16,7 @@ class MainWorkMangerFactory  @Inject constructor(
     private val driveManager: LinkSaverDriveManager,
     private val logInRepository: LogInRepository,
     private val pref: SharedPreferences,
+    private val converter: ModelConverter
 ) : WorkerFactory() {
     override fun createWorker(
         appContext: Context,
@@ -25,6 +27,7 @@ class MainWorkMangerFactory  @Inject constructor(
         driveManager,
         logInRepository,
         pref,
+        converter,
         appContext,
         workerParameters
     )
