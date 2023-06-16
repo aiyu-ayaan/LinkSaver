@@ -11,10 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.work.WorkInfo
 import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
 import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentBackupBinding
+import com.atech.linksaver.work_manager.WorkMangerType
+import com.atech.linksaver.work_manager.initWorkManagerOneTime
 import com.google.android.material.transition.MaterialSharedAxis
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -62,44 +65,32 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
         binding.apply {
             setToolbar()
             setSwitch()
-            binding.btnBackup.setOnClickListener {
-                performBackup()
-            }
+            binding.btnBackup.setOnClickListener {}
         }
     }
 
     private fun performBackup() = lifecycleScope.launch(Dispatchers.IO) {
         val content = viewModel.getAllLinks()
-        if (getFileId() == null)
-            createFirstTimeBack(content)
-        else
-            updateUpload(content)
+        if (getFileId() == null) createFirstTimeBack(content)
+        else updateUpload(content)
     }
 
     private fun updateUpload(content: String) {
-        viewModel.updateFile(
-            content, getFileId()!!,
-            onFail = {
-                Log.e(TAG, "performBackup Error : ${it.message}")
-            },
-            onProgress = {
-                Log.d(TAG, "performBackup: $it")
-            }) {
+        viewModel.updateFile(content, getFileId()!!, onFail = {
+            Log.e(TAG, "performBackup Error : ${it.message}")
+        }, onProgress = {
+            Log.d(TAG, "performBackup: $it")
+        }) {
             Log.d(TAG, "performBackup: Updated $it")
         }
     }
 
     private fun createFirstTimeBack(content: String) {
-        viewModel.uploadFile(
-            content,
-            getFolderID()!!,
-            onFail = {
-                Log.e(TAG, "performBackup Error : ${it.message}")
-            },
-            onProgress = {
-                Log.d(TAG, "performBackup: $it")
-            }
-        ) { fileData ->
+        viewModel.uploadFile(content, getFolderID()!!, onFail = {
+            Log.e(TAG, "performBackup Error : ${it.message}")
+        }, onProgress = {
+            Log.d(TAG, "performBackup: $it")
+        }) { fileData ->
             Log.d(TAG, "performBackup: $fileData")
             try {
                 viewModel.updateBackupFileIdFirebase(fileData.id!!)
@@ -111,18 +102,83 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
 
     private fun FragmentBackupBinding.setSwitch() {
         switchBackup.apply {
-            isChecked = getFolderID() != null
+//            isChecked = getFolderID() != null
             setOnCheckedChangeListener { _, state ->
-                if (state) performCreateBackup()
+                performCreateBackupWithWorkManger(state)
             }
         }
     }
 
-    private fun getFolderID(): String? =
-        pref.getString(KEY_BACK_UP_FOLDER_ID, null)
+    private fun performCreateBackupWithWorkManger(state: Boolean) {
+        initWorkManagerOneTime(
+            requireContext() to WorkMangerType.BACKUP,
+        ) { workManager, oneTimeWorkRequest ->
+            workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.id)
+                .observe(viewLifecycleOwner) { workInfo ->
+                    workInfo?.let { wf ->
+                        when (wf.state) {
+                            WorkInfo.State.SUCCEEDED -> {
+                                wf.outputData.keyValueMap.forEach {
+                                    Log.d(
+                                        TAG,
+                                        "performCreateBackupWithWorkManger: ${it.key} : ${it.value}"
+                                    )
+                                }
+                            }
 
-    private fun getFileId(): String? =
-        pref.getString(KEY_BACK_UP_FILE_ID, null)
+                            WorkInfo.State.FAILED -> {
+                                Log.d(TAG, "Worker FAILED")
+//                            if (wf.outputData) TODO: Handle Intent
+                            }
+
+                            else -> Log.d(TAG, "Worker ${wf.state}")
+                        }
+
+                    }
+                }
+        }
+//        val backUpRequest = OneTimeWorkRequestBuilder<BackupWorkManger>().setConstraints(
+//            Constraints.Builder().setRequiresBatteryNotLow(true)
+//                .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED).build()
+//        ).setInputData(
+//            Data.Builder().putString(BACK_UP_NOW, BACK_UP_NOW).build()
+//        ).build()
+//        val workManger = WorkManager.getInstance(requireContext())
+//        if (!state) {
+//            workManger.cancelAllWork()
+//            return
+//        }
+//        workManger.enqueue(backUpRequest)
+//
+//        workManger.getWorkInfoByIdLiveData(backUpRequest.id)
+//            .observe(viewLifecycleOwner) { workInfo ->
+//                workInfo?.let { wf ->
+//                    when (wf.state) {
+//
+//                        WorkInfo.State.SUCCEEDED -> {
+//                            wf.outputData.keyValueMap.forEach {
+//                                Log.d(
+//                                    TAG,
+//                                    "performCreateBackupWithWorkManger: ${it.key} : ${it.value}"
+//                                )
+//                            }
+//                        }
+//
+//                        WorkInfo.State.FAILED -> {
+//                            Log.d(TAG, "Worker FAILED")
+////                            if (wf.outputData) TODO: Handle Intent
+//                        }
+//
+//                        else -> Log.d(TAG, "Worker ${wf.state}")
+//                    }
+//
+//                }
+//            }
+    }
+
+    private fun getFolderID(): String? = pref.getString(KEY_BACK_UP_FOLDER_ID, null)
+
+    private fun getFileId(): String? = pref.getString(KEY_BACK_UP_FILE_ID, null)
 
     private fun performCreateBackup() = lifecycleScope.launch(Dispatchers.IO) {
         if (getFolderID() != null) {

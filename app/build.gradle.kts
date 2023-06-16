@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.common)
     implementation(libs.play.services.base)
+    implementation(libs.androidx.hilt.work)
     kapt(libs.hilt.android.compiler)
 
     implementation(libs.navigation.fragment.ktx)

@@ -60,6 +60,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit-junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit115" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso-espresso-core" }
 play-services-base = { group = "com.google.android.gms", name = "play-services-base", version = "18.2.0" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version = "1.0.0" }
 
 
 [plugins]

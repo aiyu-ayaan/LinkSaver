@@ -4,6 +4,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.ListenableWorker
+import androidx.work.workDataOf
 import com.atech.backup.backup.LinkSaverDriveManager
 import com.atech.backup.backup.model.BackUpModel
 import com.atech.backup.backup.model.toJson
@@ -12,10 +14,13 @@ import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
 import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
 import com.atech.core.data.use_cases.LinkUseCases
 import com.atech.linksaver.utils.ModelConverter
+import com.atech.linksaver.utils.WorkParams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @HiltViewModel
 class BackUpViewModel @Inject constructor(
@@ -69,7 +74,6 @@ class BackUpViewModel @Inject constructor(
     fun updateBackupFolderIdFirebase(folderId: String) {
         logInRepository.updateFolderId(folderId) {
             if (it != null) throw it
-
             pref.edit().putString(KEY_BACK_UP_FOLDER_ID, folderId).apply()
         }
     }
@@ -81,4 +85,12 @@ class BackUpViewModel @Inject constructor(
             pref.edit().putString(KEY_BACK_UP_FILE_ID, fileId).apply()
         }
     }
+
+
+
+    private fun getFolderID(): String? =
+        pref.getString(KEY_BACK_UP_FOLDER_ID, null)
+
+    private fun getFileId(): String? =
+        pref.getString(KEY_BACK_UP_FILE_ID, null)
 }

@@ -1,8 +1,7 @@
-package com.atech.linksaver.work_manager.backup
+package com.atech.linksaver.work_manager
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -19,35 +18,28 @@ import com.atech.linksaver.utils.CHANNEL_ID
 import com.atech.linksaver.utils.WorkParams
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-
 @HiltWorker
-class BackupWorkManger @AssistedInject constructor(
+class MainWorkManager @AssistedInject constructor(
     @Assisted private val useCases: LinkUseCases,
     @Assisted private val driveManager: LinkSaverDriveManager,
     @Assisted private val logInRepository: LogInRepository,
     @Assisted private val pref: SharedPreferences,
     @Assisted private val context: Context,
-    @Assisted private val workerParams: WorkerParameters
+    @Assisted workerParams: WorkerParameters
 ) : CoroutineWorker(
     context, workerParams
 ) {
-
     override suspend fun doWork(): Result {
-        return withContext(Dispatchers.IO) {
-            Log.d(TAG, "doWork: ${inputData.getString(WorkParams.BACK_UP_NOW)}")
-            if (!inputData.getString(WorkParams.BACK_UP_NOW).isNullOrBlank()) {
-                if (getFolderID() == null) createFolder()
-                else Result.success(
-                    workDataOf(
-                        WorkParams.FOLDER_ID to getFolderID()
-                    )
-                )
-            } else Result.failure()
+        return when {
+            WorkMangerType.LOAD_IMAGE.name == inputData.getString(WorkMangerType::javaClass.name) -> loadImageForThumbnail(
+                useCases
+            )
+
+            WorkMangerType.BACKUP.name == inputData.getString(WorkMangerType::javaClass.name) -> createFolder()
+            else -> Result.failure()
         }
     }
 
@@ -115,5 +107,4 @@ class BackupWorkManger @AssistedInject constructor(
     companion object {
         const val TAG = "BackupWorkManger"
     }
-
 }

@@ -8,14 +8,12 @@ import android.viewbinding.library.activity.viewBinding
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.work.BackoffPolicy
-import androidx.work.Constraints
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.atech.core.data.use_cases.LinkUseCases
 import com.atech.linksaver.NavHostDirections
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.ActivityMainBinding
-import com.atech.linksaver.work_manager.load_image.LoadImageManager
+import com.atech.linksaver.work_manager.WorkMangerType
+import com.atech.linksaver.work_manager.initWorkManagerOneTime
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Duration
 import java.util.concurrent.TimeUnit
@@ -57,33 +55,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun workManager() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
-            .build()
-
-        val workManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            OneTimeWorkRequestBuilder<LoadImageManager>()
-                /*.setInitialDelay(Duration.ofSeconds(5))*/
-                .setConstraints(
-                    constraints
-                )
-                .setBackoffCriteria(
+        initWorkManagerOneTime(this to WorkMangerType.LOAD_IMAGE, apply = {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                setBackoffCriteria(
                     backoffPolicy = BackoffPolicy.LINEAR,
                     duration = Duration.ofSeconds(5)
                 )
-                .build()
-        } else {
-            OneTimeWorkRequestBuilder<LoadImageManager>()
-                /*   .setInitialDelay(5, TimeUnit.SECONDS)*/
-                .setConstraints(constraints)
-                .setBackoffCriteria(
+            else
+                setBackoffCriteria(
                     BackoffPolicy.LINEAR,
                     5,
                     TimeUnit.SECONDS
                 )
-                .build()
-        }
-        WorkManager.getInstance(applicationContext).enqueue(workManager)
+        })
     }
 
 
