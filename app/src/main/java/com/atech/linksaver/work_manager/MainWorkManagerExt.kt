@@ -14,6 +14,7 @@ import com.atech.backup.backup.LinkSaverDriveManager
 import com.atech.backup.backup.model.BackUpModel
 import com.atech.backup.backup.model.toJson
 import com.atech.backup.login.LogInRepository
+import com.atech.backup.utils.DriveScope
 import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
 import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
 import com.atech.core.data.use_cases.LinkUseCases
@@ -21,10 +22,15 @@ import com.atech.core.util.loadImageCallback
 import com.atech.linksaver.ui.main_activity.MainActivity
 import com.atech.linksaver.utils.ModelConverter
 import com.atech.linksaver.utils.WorkParams
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+private const val TAG = "MainWorkManagerExt"
 
 enum class WorkMangerType {
     LOAD_IMAGE,
@@ -82,7 +88,9 @@ class BackupHelper constructor(
     private val driveManager: LinkSaverDriveManager,
     private val logInRepository: LogInRepository,
     private val pref: SharedPreferences,
-    private val converter: ModelConverter
+    private val converter: ModelConverter,
+    @DriveScope
+    private val coScope: CoroutineScope
 ) {
     /**
      * Init backup process
@@ -114,7 +122,7 @@ class BackupHelper constructor(
                 scope.resume(
                     ListenableWorker.Result.failure(
                         workDataOf(
-                            WorkParams.INTENT_ACTION to it
+                            WorkParams.ERROR_MSG to "Permission denied"
                         )
                     )
                 )
@@ -151,21 +159,12 @@ class BackupHelper constructor(
     /**
      * Create and push the file to google drive and save the file id in shared preferences
      */
-    private suspend fun createFile(): ListenableWorker.Result = suspendCoroutine { scope ->
-        driveManager.uploadFile(
-            getDataFromDatabaseAndConvertToJSON(), getFolderID()!!,
-            onFail = {
-                scope.resume(
-                    ListenableWorker.Result.failure(
-                        workDataOf(
-                            WorkParams.ERROR_MSG to it.message
-                        )
-                    )
-                )
-            },
-        ) { file ->
-            logInRepository.updateFileId(file.id!!) {
-                if (it != null) {
+    private suspend fun createFile(): ListenableWorker.Result = withContext(Dispatchers.IO) {
+        suspendCoroutine { scope ->
+            val def = coScope.async { getDataFromDatabaseAndConvertToJSON() }
+            driveManager.uploadFile(
+                runBlocking { def.await() }, getFolderID()!!,
+                onFail = {
                     scope.resume(
                         ListenableWorker.Result.failure(
                             workDataOf(
@@ -173,23 +172,36 @@ class BackupHelper constructor(
                             )
                         )
                     )
-                    return@updateFileId
-                }
-                pref.edit().putString(KEY_BACK_UP_FILE_ID, file.id!!).apply()
-                scope.resume(
-                    ListenableWorker.Result.success(
-                        workDataOf(
-                            WorkParams.FILE_ID to "Create!! -> File ID ${file.id} with folder id ${getFolderID()}"
+                },
+            ) { file ->
+                logInRepository.updateFileId(file.id!!) {
+                    if (it != null) {
+                        scope.resume(
+                            ListenableWorker.Result.failure(
+                                workDataOf(
+                                    WorkParams.ERROR_MSG to it.message
+                                )
+                            )
+                        )
+                        return@updateFileId
+                    }
+                    pref.edit().putString(KEY_BACK_UP_FILE_ID, file.id!!).apply()
+                    scope.resume(
+                        ListenableWorker.Result.success(
+                            workDataOf(
+                                WorkParams.FILE_ID to "Create!! -> File ID ${file.id} with folder id ${getFolderID()}"
+                            )
                         )
                     )
-                )
+                }
             }
         }
     }
 
     private suspend fun updateFile(): ListenableWorker.Result = suspendCoroutine { scope ->
+        val def = coScope.async { getDataFromDatabaseAndConvertToJSON() }
         driveManager.updateBackupFile(
-            getDataFromDatabaseAndConvertToJSON(),
+            runBlocking { def.await() },
             getFileId()!!,
             onFail = {
                 scope.resume(
@@ -211,12 +223,13 @@ class BackupHelper constructor(
         }
     }
 
-    private fun getDataFromDatabaseAndConvertToJSON() =
+    private suspend fun getDataFromDatabaseAndConvertToJSON() = withContext(Dispatchers.IO) {
         BackUpModel(
             useCases.getAllLinksForOnes.invoke().map {
                 converter.toDomain(it)
             }
         ).toJson()
+    }
 
 
     //-------------------------- Helper --------------------------//

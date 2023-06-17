@@ -1,7 +1,10 @@
 package com.atech.backup.login
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.util.Log
+import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
+import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.AuthCredential
@@ -13,7 +16,8 @@ import javax.inject.Inject
 class LogInRepository @Inject constructor(
     private val auth: FirebaseAuth,
     private val fireStore: FirebaseFirestore,
-    val googleSignInClient: GoogleSignInClient
+    val googleSignInClient: GoogleSignInClient,
+    private val pref: SharedPreferences
 ) {
 
     fun signInWithCredential(credential: AuthCredential, result: (Exception?) -> Unit = {}) {
@@ -75,6 +79,10 @@ class LogInRepository @Inject constructor(
     fun logOut(customAction: () -> Unit = {}) {
         auth.signOut()
         googleSignInClient.signOut()
+        pref.edit().apply {
+            putString(KEY_BACK_UP_FOLDER_ID, null)
+            putString(KEY_BACK_UP_FILE_ID, null)
+        }.apply()
         customAction.invoke()
     }
 

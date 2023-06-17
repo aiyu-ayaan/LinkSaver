@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.os.Build
 import androidx.work.Configuration
 import com.atech.linksaver.utils.CHANNEL_ID
-import com.atech.linksaver.work_manager.backup.BackupWorkManagerFactory
 import com.atech.linksaver.work_manager.MainWorkMangerFactory
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
@@ -18,8 +17,6 @@ class LinkSaver : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: MainWorkMangerFactory
 
-    @Inject
-    lateinit var backupWorkManagerFactory: BackupWorkManagerFactory
     override fun onCreate() {
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)

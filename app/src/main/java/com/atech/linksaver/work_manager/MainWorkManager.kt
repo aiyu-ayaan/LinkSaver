@@ -15,6 +15,7 @@ import com.atech.linksaver.utils.CHANNEL_ID
 import com.atech.linksaver.utils.ModelConverter
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CoroutineScope
 
 /**
  *
@@ -32,6 +33,7 @@ class MainWorkManager @AssistedInject constructor(
     @Assisted private val logInRepository: LogInRepository,
     @Assisted private val pref: SharedPreferences,
     @Assisted private val converter: ModelConverter,
+    @Assisted private val scope: CoroutineScope,
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters
 ) : CoroutineWorker(
@@ -49,12 +51,19 @@ class MainWorkManager @AssistedInject constructor(
                     driveManager,
                     logInRepository,
                     pref,
-                    converter
+                    converter,
+                    scope
                 )
-                helper.createFolderForBackup().let {
-                    helper.createFileForBackup()
+                driveManager.isDriveServiceAvailable().let {
+                    if (it) {
+                        helper.createFolderForBackup().let {
+                            helper.createFileForBackup()
+                        }
+                    } else {
+                        driveManager.reCreateDrive()
+                        Result.retry()
+                    }
                 }
-
             }
 
             else -> Result.failure()

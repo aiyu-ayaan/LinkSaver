@@ -86,10 +86,19 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/nav_host"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_logInFragment_to_backUpFragment"
+            app:destination="@id/backUpFragment"
+            app:popUpTo="@id/logInFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/backUpFragment"
         android:name="com.atech.linksaver.ui.fragment.backup.BackUpFragment"
         android:label="fragment_backup"
-        tools:layout="@layout/fragment_backup" />
+        tools:layout="@layout/fragment_backup" >
+        <action
+            android:id="@+id/action_backUpFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
+    </fragment>
 </navigation>
