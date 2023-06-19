@@ -1,6 +1,7 @@
 package com.atech.linksaver.ui.fragment.login
 
 import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.atech.backup.login.LogInRepository
+import com.atech.backup.utils.LogInKeys
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.FragmentLoginBinding
 import com.google.android.gms.common.api.ApiException
@@ -26,6 +28,9 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
 
     @Inject
     lateinit var logInRepository: LogInRepository
+
+    @Inject
+    lateinit var pref: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,19 +59,33 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
 
     private fun firebaseAuthWithGoogle(token: String) {
         val credential = logInRepository.getCredentials(token)
-        logInRepository.signInWithCredential(credential) {
-            if (it != null) {
-                Toast.makeText(requireContext(), "${it.message}", Toast.LENGTH_SHORT).show()
-                Log.d(TAG, "firebaseAuthWithGoogle: ${it.message}")
+        logInRepository.signInWithCredential(credential) { (isNewUser, exception) ->
+            if (exception != null) {
+                Toast.makeText(requireContext(), "${exception.message}", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "firebaseAuthWithGoogle: ${exception.message}")
                 return@signInWithCredential
             }
-            navigateToHome()
+            if (isNewUser) {
+                pref.edit()
+                    .apply {
+                        putBoolean(LogInKeys.IS_RESTORE_DONE.name, true)
+                    }.apply()
+                navigateToHome()
+                return@signInWithCredential
+            }
+            navigateToRestore()
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changeStatusBarColor()
+        val isRestoreDone = pref.getBoolean(LogInKeys.IS_RESTORE_DONE.name, false)
+        val isPermanentlySkip = pref.getBoolean(LogInKeys.IS_PERMANENT_SKIP.name, false)
+        if (logInRepository.isSignedIn() && !isRestoreDone && !isPermanentlySkip) {
+            navigateToRestore()
+            return // to avoid the code below
+        }
         if (logInRepository.isSignedIn()) {
             navigateToHome()
         }
@@ -90,6 +109,14 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
         reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
         findNavController().navigate(
             LogInFragmentDirections.actionLogInFragmentToHomeFragment()
+        )
+    }
+
+    private fun navigateToRestore() {
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true)
+        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false)
+        findNavController().navigate(
+            LogInFragmentDirections.actionLogInFragmentToRestoreFragment()
         )
     }
 

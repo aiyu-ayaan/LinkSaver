@@ -3,8 +3,7 @@ package com.atech.backup.login
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
-import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
-import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
+import com.atech.backup.utils.BackupKeys
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.AuthCredential
@@ -20,7 +19,10 @@ class LogInRepository @Inject constructor(
     private val pref: SharedPreferences
 ) {
 
-    fun signInWithCredential(credential: AuthCredential, result: (Exception?) -> Unit = {}) {
+    fun signInWithCredential(
+        credential: AuthCredential,
+        result: (Pair<Boolean, Exception?>) -> Unit = {}
+    ) {
         Log.d("AAA", "signInWithCredential: called")
         auth.signInWithCredential(credential).addOnSuccessListener {
             val currentUser = auth.currentUser?.let { currentUser ->
@@ -31,11 +33,24 @@ class LogInRepository @Inject constructor(
                     currentUser.photoUrl.toString(),
                 )
             }
-            fireStore.collection("users").document(it.user?.uid!!).set(currentUser!!)
-                .addOnSuccessListener {
-                    result.invoke(null)
-                }.addOnFailureListener(result::invoke)
-        }.addOnFailureListener(result::invoke)
+            it.additionalUserInfo?.isNewUser?.let { isNewUser ->
+                if (isNewUser) {
+                    fireStore.collection("users").document(it.user?.uid!!).set(currentUser!!)
+                        .addOnSuccessListener {
+                            result.invoke(true to null)
+                        }.addOnFailureListener { ex ->
+                            result.invoke(false to ex)
+                        }
+                } else {
+                    result.invoke(false to null)
+                }
+            } ?: run {
+                result.invoke(false to Exception("Something went wrong"))
+            }
+
+        }.addOnFailureListener {
+            result.invoke(false to it)
+        }
     }
 
 
@@ -80,10 +95,23 @@ class LogInRepository @Inject constructor(
         auth.signOut()
         googleSignInClient.signOut()
         pref.edit().apply {
-            putString(KEY_BACK_UP_FOLDER_ID, null)
-            putString(KEY_BACK_UP_FILE_ID, null)
+            putString(BackupKeys.BACK_UP_FOLDER_ID.name, null)
+            putString(BackupKeys.BACK_UP_FILE_ID.name, null)
+            putString(BackupKeys.LAST_BACK_UP_TIME.name, null)
         }.apply()
         customAction.invoke()
+    }
+
+    fun getUserDataFromFireStore(onComplete: (GetUserModel?, Exception?) -> Unit) {
+        val currentUser = auth.currentUser
+        currentUser?.let {
+            fireStore.collection("users").document(it.uid).get().addOnSuccessListener { document ->
+                val user = document.toObject(GetUserModel::class.java)
+                onComplete.invoke(user, null)
+            }.addOnFailureListener { ex ->
+                onComplete.invoke(null, ex)
+            }
+        } ?: onComplete.invoke(null, Exception("User is null"))
     }
 
 }

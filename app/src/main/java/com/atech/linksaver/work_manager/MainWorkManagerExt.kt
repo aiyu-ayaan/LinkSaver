@@ -14,9 +14,8 @@ import com.atech.backup.backup.LinkSaverDriveManager
 import com.atech.backup.backup.model.BackUpModel
 import com.atech.backup.backup.model.toJson
 import com.atech.backup.login.LogInRepository
+import com.atech.backup.utils.BackupKeys
 import com.atech.backup.utils.DriveScope
-import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
-import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
 import com.atech.core.data.use_cases.LinkUseCases
 import com.atech.core.util.loadImageCallback
 import com.atech.linksaver.ui.main_activity.MainActivity
@@ -139,7 +138,7 @@ class BackupHelper constructor(
                     )
                     return@updateFolderId
                 }
-                pref.edit().putString(KEY_BACK_UP_FOLDER_ID, it).apply()
+                pref.edit().putString(BackupKeys.BACK_UP_FOLDER_ID.name, it).apply()
                 scope.resume(
                     ListenableWorker.Result.success(
                         workDataOf(
@@ -185,7 +184,7 @@ class BackupHelper constructor(
                         )
                         return@updateFileId
                     }
-                    pref.edit().putString(KEY_BACK_UP_FILE_ID, file.id!!).apply()
+                    pref.edit().putString(BackupKeys.BACK_UP_FILE_ID.name, file.id!!).apply()
                     scope.resume(
                         ListenableWorker.Result.success(
                             workDataOf(
@@ -233,8 +232,8 @@ class BackupHelper constructor(
 
 
     //-------------------------- Helper --------------------------//
-    private fun getFolderID(): String? = pref.getString(KEY_BACK_UP_FOLDER_ID, null)
+    private fun getFolderID(): String? = pref.getString(BackupKeys.BACK_UP_FOLDER_ID.name, null)
 
-    private fun getFileId(): String? = pref.getString(KEY_BACK_UP_FILE_ID, null)
+    private fun getFileId(): String? = pref.getString(BackupKeys.BACK_UP_FILE_ID.name, null)
 
 }

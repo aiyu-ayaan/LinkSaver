@@ -49,4 +49,6 @@
     <string name="log_in">Log In</string>
     <string name="log_in_backup_message">You need to log in to your Google account to perform this action</string>
     <string name="cancel">Cancel</string>
+    <string name="restore_description">It will restore all your saved links !!</string>
+    <string name="loading">Loading !!!!</string>
 </resources>

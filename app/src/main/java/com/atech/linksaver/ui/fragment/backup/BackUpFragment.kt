@@ -15,9 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.work.WorkInfo
 import com.atech.backup.backup.LinkSaverDriveManager
 import com.atech.backup.login.LogInRepository
-import com.atech.backup.utils.KEY_BACK_UP_FILE_ID
-import com.atech.backup.utils.KEY_BACK_UP_FOLDER_ID
-import com.atech.backup.utils.KEY_LAST_BACK_UP_TIME
+import com.atech.backup.utils.BackupKeys
 import com.atech.core.util.convertLongToTime
 import com.atech.linksaver.R
 import com.atech.linksaver.databinding.BackupDialogBinding
@@ -139,7 +137,7 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
                                 }
                                 pref.edit().apply {
                                     putString(
-                                        KEY_LAST_BACK_UP_TIME,
+                                        BackupKeys.LAST_BACK_UP_TIME.name,
                                         System.currentTimeMillis()
                                             .convertLongToTime("dd/MM/yyyy hh:mm:ss a")
                                     )
@@ -168,12 +166,13 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
 
     private fun resetIDs() {
         pref.edit().apply {
-            putString(KEY_BACK_UP_FOLDER_ID, null)
-            putString(KEY_BACK_UP_FILE_ID, null)
+            putString(BackupKeys.BACK_UP_FOLDER_ID.name, null)
+            putString(BackupKeys.BACK_UP_FILE_ID.name, null)
+            putString(BackupKeys.LAST_BACK_UP_TIME.name, null)
         }.apply()
     }
 
-    private fun getLastBackup() = pref.getString(KEY_LAST_BACK_UP_TIME, null).let {
+    private fun getLastBackup() = pref.getString(BackupKeys.LAST_BACK_UP_TIME.name, null).let {
         if (it != null) getString(R.string.last_backup_s, it)
         else getString(R.string.last_backup_s, getString(R.string.never))
     }

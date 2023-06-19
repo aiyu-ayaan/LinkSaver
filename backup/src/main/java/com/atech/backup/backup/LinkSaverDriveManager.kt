@@ -33,7 +33,7 @@ class LinkSaverDriveManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    fun provideDriveService(): Drive? =
+    private fun provideDriveService(): Drive? =
         createDriveInstance()
 
 

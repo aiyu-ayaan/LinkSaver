@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:padding="@dimen/grid_1"
+    tools:context="com.atech.linksaver.ui.fragment.login.restore.RestoreFragment">
+
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_indicator_restore"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        app:indicatorSize="@dimen/grid_7" />
+
+    <TextView
+        android:id="@+id/text_view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progress_indicator_restore"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/grid_1"
+        android:padding="@dimen/grid_1"
+        android:text="@string/loading"
+        android:textAppearance="?attr/textAppearanceCaption" />
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_restore"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/image_view_restore"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/thumbnail_image_size"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:src="@drawable/round_backup_24"
+            app:tint="?attr/colorAccent" />
+
+        <TextView
+            android:id="@+id/text_view_restore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_view_restore"
+            android:padding="@dimen/grid_1"
+            android:text="@string/restore"
+            android:textAppearance="?attr/textAppearancePopupMenuHeader" />
+
+        <TextView
+            android:id="@+id/text_view_restore_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_restore"
+            android:paddingHorizontal="@dimen/grid_1"
+            android:text="@string/restore_description"
+            android:textAppearance="?attr/textAppearanceCaption" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_view_restore_description"
+            android:layout_marginTop="@dimen/grid_1"
+            android:orientation="horizontal"
+            android:padding="@dimen/grid_1"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/button_skip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/grid_1"
+                android:layout_weight="1"
+                android:text="@string/skip"
+                android:textColor="?attr/colorPrimary"
+                android:theme="@style/ThemeOverlay.Material3.Button.TextButton"
+                app:cornerRadius="@dimen/grid_1_5" />
+
+            <Button
+                android:id="@+id/button_restore"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/restore"
+                app:cornerRadius="@dimen/grid_1_5" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</RelativeLayout>

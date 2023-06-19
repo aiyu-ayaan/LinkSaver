@@ -1,6 +1,5 @@
 package com.atech.linksaver.ui.fragment.home
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -11,7 +10,6 @@ import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.activity.addCallback
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.doOnPreDraw
@@ -29,7 +27,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
-import com.atech.backup.backup.LinkSaverDriveManager
 import com.atech.core.data.model.LinkModel
 import com.atech.core.util.openLink
 import com.atech.linksaver.R
@@ -44,7 +41,6 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.android.material.transition.platform.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
