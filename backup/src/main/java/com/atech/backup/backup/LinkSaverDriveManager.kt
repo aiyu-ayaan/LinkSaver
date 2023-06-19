@@ -161,6 +161,23 @@ class LinkSaverDriveManager @Inject constructor(
         } ?: onFail(Exception("Drive is not available"))
     }
 
+    fun restoreBackupFile(
+        fileId: String,
+        onFail: (Exception) -> Unit = {},
+        onSuccess: (String) -> Unit = {}
+    ) {
+        provideDriveService()?.let {
+            try {
+                val file = it.files().get(fileId).execute()
+                val fileContent = it.files().get(fileId).executeMediaAsInputStream()
+                val fileData = fileContent.bufferedReader().use { it.readText() }
+                onSuccess(fileData)
+            } catch (e: Exception) {
+                onFail(e)
+            }
+        } ?: onFail(Exception("Drive is not available"))
+    }
+
 
     data class FileData(
         val id: String?, val name: String?, val webContentLink: String?, val webViewLink: String?

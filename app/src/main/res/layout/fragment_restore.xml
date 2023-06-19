@@ -8,6 +8,14 @@
     android:padding="@dimen/grid_1"
     tools:context="com.atech.linksaver.ui.fragment.login.restore.RestoreFragment">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_indicator_restore_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:trackColor="?attr/colorSurface"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:indeterminate="true" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_indicator_restore"

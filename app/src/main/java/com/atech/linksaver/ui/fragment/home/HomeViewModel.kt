@@ -42,6 +42,10 @@ class HomeViewModel @Inject constructor(
         cases.autoDeleteIn30Days()
     }
 
+    fun deletePermanentAll() = viewModelScope.launch {
+        cases.deletePermanentAll.invoke()
+    }
+
     fun logOut(customAction: () -> Unit = {}) = logInRepository.logOut(customAction)
 
     fun isSignedIn() = logInRepository.isSignedIn()

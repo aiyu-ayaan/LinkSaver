@@ -160,7 +160,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             positiveText = getString(R.string.yes),
             negativeText = getString(R.string.no),
             positiveAction = { dialog ->
-                viewModel.logOut()
+                viewModel.logOut {
+                    viewModel.deletePermanentAll()
+                    navigateToLogIn()
+                }
                 dialog.dismiss()
             },
             negativeAction = { dialog ->

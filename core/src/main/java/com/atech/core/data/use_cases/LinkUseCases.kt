@@ -14,10 +14,12 @@ enum class LinkType {
 data class LinkUseCases @Inject constructor(
     val getAllLinks: GetAllLinks,
     val insertLink: InsertLink,
+    val insertLinks: InsertLinks,
     val updateLink: UpdateLink,
     val updateArchive: UpdateArchive,
     val updateIsDeleted: UpdateIsDeleted,
     val deletePermanent: DeletePermanent,
+    val deletePermanentAll: DeletePermanentAll,
     val deleteAllLinks: DeleteAllLinks,
     val autoDeleteIn30Days: AutoDeleteIn30Days,
     val searchLink: SearchLink,
@@ -49,6 +51,18 @@ class InsertLink @Inject constructor(
                 url = link,
                 shortDes = shortDes,
             )
+        )
+    }
+}
+
+class InsertLinks @Inject constructor(
+    private val dao: LinkDao
+) {
+    suspend operator fun invoke(
+        list: List<LinkModel>
+    ) {
+        dao.insertLink(
+            list
         )
     }
 }
@@ -138,6 +152,14 @@ class AutoDeleteIn30Days @Inject constructor(
         }.forEach { link ->
             doa.deleteLink(link)
         }
+    }
+}
+
+class DeletePermanentAll @Inject constructor(
+    private val doa: LinkDao
+) {
+    suspend operator fun invoke() {
+        doa.deleteAllLinksPermanent()
     }
 }
 

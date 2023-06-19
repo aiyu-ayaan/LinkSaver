@@ -39,6 +39,9 @@ interface LinkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLink(linkModel: LinkModel)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLink(linkModels: List<LinkModel>)
+
 
     @Update
     suspend fun updateLink(linkModel: LinkModel): Int
@@ -53,6 +56,9 @@ interface LinkDao {
 
     @Query("DELETE FROM link WHERE isDeleted = 1 AND deletedAt >= date('now','-30 day')")
     suspend fun autoDeleteIn30Days()
+
+    @Query("DELETE FROM link ")
+    suspend fun deleteAllLinksPermanent()
 
 
     @Query("SELECT * FROM LINK WHERE isThumbnailLoaded = 0")

@@ -43,7 +43,7 @@
     <string name="back_up_settings">Back Settings</string>
     <string name="back_up_now">BackUp Now</string>
     <string name="last_backup">Last backup</string>
-    <string name="back_up_in_progress">Backup in progress...</string>
+    <string name="back_up_in_progress">Backup in progress…</string>
     <string name="last_backup_s">Last Backup: %s</string>
     <string name="never">Never</string>
     <string name="log_in">Log In</string>

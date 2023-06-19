@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import com.atech.backup.utils.BackupKeys
+import com.atech.backup.utils.LogInKeys
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.AuthCredential
@@ -98,6 +99,8 @@ class LogInRepository @Inject constructor(
             putString(BackupKeys.BACK_UP_FOLDER_ID.name, null)
             putString(BackupKeys.BACK_UP_FILE_ID.name, null)
             putString(BackupKeys.LAST_BACK_UP_TIME.name, null)
+            putBoolean(LogInKeys.IS_RESTORE_DONE.name, false)
+            putBoolean(LogInKeys.IS_PERMANENT_SKIP.name, false)
         }.apply()
         customAction.invoke()
     }
