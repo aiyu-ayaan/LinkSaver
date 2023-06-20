@@ -96,7 +96,7 @@ class BackupHelper constructor(
      * @return [ListenableWorker.Result] with [WorkParams.FOLDER_ID] if folder created successfully
      */
     suspend fun createFolderForBackup() =
-        if (getFolderID() == null) createFolder()
+        if (getFolderID() == null) createFolder() // first time
         else ListenableWorker.Result.success(
             workDataOf(
                 WorkParams.FOLDER_ID to getFolderID()
@@ -162,7 +162,7 @@ class BackupHelper constructor(
         suspendCoroutine { scope ->
             val def = coScope.async { getDataFromDatabaseAndConvertToJSON() }
             driveManager.uploadFile(
-                runBlocking { def.await() }, getFolderID()!!,
+                runBlocking { def.await() }, getFolderID()?: "",
                 onFail = {
                     scope.resume(
                         ListenableWorker.Result.failure(

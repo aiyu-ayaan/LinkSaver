@@ -89,7 +89,7 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
                 return@setOnClickListener
             }
             createBackupDialog()
-            performCreateBackupWithWorkManger()
+
         }
     }
 
@@ -142,7 +142,7 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
                                             .convertLongToTime("dd/MM/yyyy hh:mm:ss a")
                                     )
                                 }.apply()
-                                backupDialog.dismiss()
+                                if(::backupDialog.isInitialized) backupDialog.dismiss()
                             }
 
                             WorkInfo.State.FAILED -> {
@@ -152,7 +152,7 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
                                         "performCreateBackupWithWorkManger: ${it.key} : ${it.value}"
                                     )
                                 }
-                                backupDialog.dismiss()
+                                if(::backupDialog.isInitialized) backupDialog.dismiss()
                             }
 
                             else -> Log.d(TAG, "Worker ${wf.state}")
@@ -186,6 +186,7 @@ class BackUpFragment : Fragment(R.layout.fragment_backup) {
         backupDialog.setOnDismissListener {
             binding.tvBackupDate.text = getLastBackup()
         }
+        performCreateBackupWithWorkManger()
     }
 
     private fun FragmentBackupBinding.setToolbar() {
