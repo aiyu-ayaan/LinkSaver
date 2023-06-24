@@ -1,11 +1,11 @@
 package com.atech.backup.backup.model
 
 import android.os.Parcelable
-import com.google.errorprone.annotations.Keep
+import androidx.annotation.Keep
 import com.google.gson.GsonBuilder
 import kotlinx.parcelize.Parcelize
 
-
+@Keep
 data class BackUpModel(
     val links: List<LinkBackUpModel>
 )

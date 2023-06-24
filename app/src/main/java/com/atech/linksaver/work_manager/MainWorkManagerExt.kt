@@ -3,6 +3,7 @@ package com.atech.linksaver.work_manager
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.annotation.Keep
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ListenableWorker
@@ -30,7 +31,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 private const val TAG = "MainWorkManagerExt"
-
+@Keep
 enum class WorkMangerType {
     LOAD_IMAGE,
     BACKUP,

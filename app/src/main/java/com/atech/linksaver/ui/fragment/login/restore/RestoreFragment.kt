@@ -79,13 +79,14 @@ class RestoreFragment : Fragment(R.layout.fragment_restore) {
         binding.progressIndicatorRestoreHorizontal.isVisible = true
         try {
             viewModel.restore().apply {
+                Log.d(TAG, "handleBackUp: ${toBackUpModel().links}")
                 viewModel.addAllLinks(toBackUpModel().links)
             }
             updateRestoreDone()
             navigateToHome()
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "${e.message}", Toast.LENGTH_SHORT).show()
-            Log.d(TAG, "handleBackUp: ${e.message}")
+            Toast.makeText(requireContext(), "$e", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "handleBackUp: $e")
             updateRestoreDone()
             navigateToHome()
         }

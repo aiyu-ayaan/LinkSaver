@@ -3,6 +3,7 @@ package com.atech.backup.backup
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.annotation.Keep
 import com.atech.backup.backup.MimeType.JSON
 import com.atech.backup.utils.BACK_UP_FILE_NAME
 import com.atech.backup.utils.BACK_UP_FOLDER_NAME
@@ -23,6 +24,7 @@ import javax.inject.Singleton
 
 private const val TAG = "LinkSaverDriveManager"
 
+@Keep
 private object MimeType {
     const val JSON: String = "application/json"
     const val FOLDER = "application/vnd.google-apps.folder"
@@ -179,6 +181,7 @@ class LinkSaverDriveManager @Inject constructor(
     }
 
 
+    @Keep
     data class FileData(
         val id: String?, val name: String?, val webContentLink: String?, val webViewLink: String?
     )
