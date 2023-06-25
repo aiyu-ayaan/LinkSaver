@@ -90,6 +90,7 @@ class ArchiveFragment : Fragment(R.layout.fragment_archive) {
             menu?.findItem(R.id.menu_add_to_archive)?.isVisible = false
             menu?.findItem(R.id.menu_restore)?.isVisible = false
             menu?.findItem(R.id.menu_add_filter)?.isVisible = false
+            menu?.findItem(R.id.menu_share)?.isVisible = false
             true
         }, onActionItemClicked = { _, item ->
             when (item?.itemId) {

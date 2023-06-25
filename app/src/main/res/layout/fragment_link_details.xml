@@ -48,6 +48,19 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/materialButtonShare"
+                style="?attr/materialIconButtonFilledStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/grid_1"
+                android:backgroundTint="?colorSurface"
+                android:paddingHorizontal="@dimen/grid_2"
+                app:icon="@drawable/outline_share_24"
+                app:iconTint="?attr/colorPrimary"
+                app:layout_constraintEnd_toStartOf="@+id/materialButtonOpen"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/materialButtonDelete"
                 style="?attr/materialIconButtonFilledStyle"
                 android:layout_width="wrap_content"
@@ -109,6 +122,25 @@
                     android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_filter"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/grid_1"
+                android:layout_marginEnd="@dimen/grid_1"
+                android:hint="@string/filter_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/materialButtonClose"
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_short_description">
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    tools:ignore="LabelFor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/materialDivider"
@@ -116,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/grid_1"
                 app:dividerColor="@color/divider"
-                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_short_description" />
+                app:layout_constraintTop_toBottomOf="@+id/text_input_layout_filter" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/materialCardView"

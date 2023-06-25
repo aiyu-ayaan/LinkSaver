@@ -1,6 +1,7 @@
 package com.atech.linksaver.ui.fragment.home
 
 import android.os.Bundle
+import android.view.ActionMode
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import android.widget.CheckBox
@@ -32,6 +33,7 @@ import com.atech.linksaver.ui.fragment.home.HomeViewModel.Companion.DEFAULT_QUER
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
 import com.atech.linksaver.utils.DELETE_DIALOG
 import com.atech.linksaver.utils.addOnContextualMenuListener
+import com.atech.linksaver.utils.openShare
 import com.atech.linksaver.utils.universalDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.color.MaterialColors
@@ -165,11 +167,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.bottomAppBar.performHide()
             disableAllChips(false)
             false
-        }, onActionItemClicked = { _, item ->
+        }, onActionItemClicked = { mode, item ->
             when (item?.itemId) {
                 R.id.menu_delete -> handleDelete()
                 R.id.menu_add_to_archive -> addToArchive()
-                R.id.menu_add_filter -> addToFilter()
+                R.id.menu_add_filter -> addToFilter(mode)
+
+                R.id.menu_share -> shareLink().also {
+                    mode?.finish()
+                }
+
                 else -> false
             }
         }, onDestroy = { mode ->
@@ -185,8 +192,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         selectedItem.observe(viewLifecycleOwner) {
             action?.menu?.findItem(R.id.menu_delete)?.isVisible = it.isNotEmpty()
             action?.menu?.findItem(R.id.menu_add_to_archive)?.isVisible = it.isNotEmpty()
+            action?.menu?.findItem(R.id.menu_add_filter)?.isVisible = it.isNotEmpty()
+            action?.menu?.findItem(R.id.menu_share)?.isVisible = it.size == 1
             action?.title = it.size.toString()
         }
+    }
+
+    private fun shareLink(): Boolean {
+        selectedItem.value?.firstOrNull()?.let {
+            requireActivity().openShare(it)
+        }
+        return true
     }
 
     private fun disableAllChips(isEnable: Boolean) {
@@ -202,12 +218,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         return true
     }
 
-    private fun addToFilter(): Boolean {
-        createFilterListDialog()
+    private fun addToFilter(mode: ActionMode?): Boolean {
+        createFilterListDialog(mode)
         return true
     }
 
-    private fun createFilterListDialog() {
+    private fun createFilterListDialog(mode: ActionMode?) {
         var filterName = ""
         val binding = LayoutListFiltersBinding.inflate(layoutInflater)
         binding.addFilters {
@@ -218,6 +234,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             .setPositiveButton(getString(R.string.add)) { _, _ ->
                 if (filterName.isNotEmpty()) {
                     updateList(filterName)
+                    mode?.finish()
                 }
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }

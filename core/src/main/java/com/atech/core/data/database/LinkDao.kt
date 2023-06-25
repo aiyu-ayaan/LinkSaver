@@ -59,4 +59,7 @@ interface LinkDao {
     @Query("UPDATE link SET filter = '' WHERE filter = :oldFilter")
     suspend fun removeFilter(oldFilter: String)
 
+    @Query("UPDATE link SET filter = :newFilter WHERE filter = :oldFilter")
+    suspend fun updateFilter(oldFilter: String, newFilter: String)
+
 }

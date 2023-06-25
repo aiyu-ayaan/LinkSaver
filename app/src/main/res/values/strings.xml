@@ -27,4 +27,8 @@
     <string name="add_filter">Add Filter</string>
     <string name="edit_filter">Edit Filter</string>
     <string name="filters">Filters</string>
+    <string name="none">None</string>
+    <string name="github_link">https://github.com/aiyu-ayaan/LinkSaver</string>
+    <string name="update">Update</string>
+    <string name="share">Share</string>
 </resources>

@@ -29,6 +29,7 @@ data class LinkUseCases @Inject constructor(
     val updateIsThumbnailLoaded: UpdateIsThumbnailLoaded,
     val addFilter: AddFilter,
     val removeFilter: RemoveFilter,
+    val updateFilter: UpdateFilter
 )
 
 
@@ -64,13 +65,16 @@ class UpdateLink @Inject constructor(
     private val dao: LinkDao
 ) {
     /**
-     * @param date Pair<url,shortDes>
+     * @param date Triple<url,shortDes,Filter>
      */
     suspend operator fun invoke(
-        date: Pair<String, String>, old: LinkModel
+        date: Triple<String, String, String>, old: LinkModel
     ) {
-        if (date.second != old.shortDes && date.first == old.url) {
-            dao.updateLink(old.copy(shortDes = date.second))
+        if ((date.second != old.shortDes || date.third != old.filter) && date.first == old.url) {
+            dao.updateLink(old.copy(
+                shortDes = date.second,
+                filter = date.third
+            ))
             return
         }
 
@@ -187,5 +191,13 @@ class RemoveFilter @Inject constructor(
 ) {
     suspend operator fun invoke(oldFilter: String) {
         doa.removeFilter(oldFilter)
+    }
+}
+
+class UpdateFilter @Inject constructor(
+    private val doa: LinkDao
+) {
+    suspend operator fun invoke(oldFilter: String, newFilter: String) {
+        doa.updateFilter(oldFilter, newFilter)
     }
 }

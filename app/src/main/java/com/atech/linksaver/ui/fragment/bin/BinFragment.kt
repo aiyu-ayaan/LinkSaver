@@ -121,6 +121,7 @@ class BinFragment : Fragment(R.layout.fragment_bin) {
             menu?.findItem(R.id.menu_add_to_archive)?.isVisible = false
             menu?.findItem(R.id.menu_delete)?.isVisible = false
             menu?.findItem(R.id.menu_add_filter)?.isVisible = false
+            menu?.findItem(R.id.menu_share)?.isVisible = false
             true
         }, onActionItemClicked = { _, item ->
             when (item?.itemId) {

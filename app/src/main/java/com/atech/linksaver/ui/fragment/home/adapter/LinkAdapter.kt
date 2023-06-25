@@ -74,7 +74,7 @@ class LinkAdapter(
             }
             binding.materialButton.apply {
                 if (!isEditEnable) {
-                  width = resources.getDimensionPixelSize(R.dimen._0sdp)
+                    width = resources.getDimensionPixelSize(R.dimen._0sdp)
                     isInvisible = true
                     return@apply
                 }
@@ -93,18 +93,21 @@ class LinkAdapter(
                 root.transitionName = linkModel.url
                 textViewLink.text = linkModel.url
                 bottomItemLogic(linkModel)
+                if (!isLongClickEnable)
+                    resetOnLongClickState()
             }
-            resetOnLongClickState()
         }
 
         private fun changeOnLongClickState() = binding.checkBox.apply {
             isVisible = true
             isChecked = true
+            binding.materialButton.isEnabled = false
         }
 
         private fun resetOnLongClickState() = binding.checkBox.apply {
             isVisible = false
             isChecked = false
+            binding.materialButton.isEnabled = true
         }
 
 
@@ -143,11 +146,19 @@ class LinkAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkViewHolder =
-        LinkViewHolder(RowLinksBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        LinkViewHolder(
+            RowLinksBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+
 
     override fun onBindViewHolder(holder: LinkViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
 
     override fun getItemId(position: Int): Long {
         return getItem(position).url.hashCode().toLong()

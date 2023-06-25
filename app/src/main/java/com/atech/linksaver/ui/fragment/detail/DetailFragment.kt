@@ -3,11 +3,15 @@ package com.atech.linksaver.ui.fragment.detail
 import android.os.Bundle
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
+import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
+import com.atech.core.data.model.FilterModel
+import com.atech.core.data.use_cases.DefaultFilter
+import com.atech.core.data.use_cases.FilterUseCases
 import com.atech.core.data.use_cases.LinkUseCases
 import com.atech.core.util.isLink
 import com.atech.core.util.openLink
@@ -17,7 +21,9 @@ import com.atech.linksaver.utils.DELETE_DIALOG
 import com.atech.linksaver.utils.launchWhenStarted
 import com.atech.linksaver.utils.loadIcon
 import com.atech.linksaver.utils.loadImage
+import com.atech.linksaver.utils.openShare
 import com.atech.linksaver.utils.universalDialog
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -32,6 +38,9 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
 
     @Inject
     lateinit var usedCases: LinkUseCases
+
+    @Inject
+    lateinit var filterUseCases: FilterUseCases
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition = MaterialContainerTransform()
@@ -45,6 +54,7 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
             closeIcon()
             openLinkClick()
             saveLinkClick()
+            openShare()
             deleteLinkClick()
         }
     }
@@ -66,6 +76,13 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
             context?.openLink(model.url)
         }
     }
+
+    private fun FragmentLinkDetailsBinding.openShare() {
+        materialButtonShare.setOnClickListener {
+            requireActivity().openShare(model)
+        }
+    }
+
 
     private fun FragmentLinkDetailsBinding.saveLinkClick() {
         materialButtonSave.setOnClickListener {
@@ -95,10 +112,20 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
 
 
     private fun updateNote(link: String) = launchWhenStarted {
+        val triple = Triple(
+            link,
+            if (binding.textInputLayoutShortDescription.editText?.text?.isEmpty() == true) ""
+            else binding.textInputLayoutShortDescription.editText?.text.toString(),
+            if (binding.textInputLayoutFilter.editText?.text?.isEmpty() == true) DefaultFilter.ALL.value
+            else {
+                binding.textInputLayoutFilter.editText?.text!!.let {
+                    if (it.toString() == getString(R.string.none)) DefaultFilter.ALL.value
+                    else it.toString()
+                }
+            }
+        )
         usedCases.updateLink(
-            link to
-                    if (binding.textInputLayoutShortDescription.editText?.text?.isEmpty() == true) ""
-                    else binding.textInputLayoutShortDescription.editText?.text.toString(), model
+            triple, model
         )
         findNavController().navigateUp()
     }
@@ -119,6 +146,7 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
         textInputLayoutShortDescription.apply {
             editText?.setText(model.shortDes)
         }
+        getFilterTextView()
 
         if (model.title.isNullOrEmpty()) {
             textInputLayoutTitle.isVisible = false
@@ -141,5 +169,20 @@ class DetailFragment : Fragment(R.layout.fragment_link_details) {
             imageViewIcon.load(R.drawable.avatar_svgrepo_com)
         } else imageViewIcon.loadIcon(model.icon!!)
 
+    }
+
+    private fun FragmentLinkDetailsBinding.getFilterTextView() = launchWhenStarted {
+        filterUseCases.getAllFilters.invoke().observe(viewLifecycleOwner) {
+            val adapter = ArrayAdapter(requireContext(),
+                R.layout.list_item,
+                it.toMutableList().also { mutableList ->
+                    mutableList.add(FilterModel(getString(R.string.none), Int.MAX_VALUE))
+                }.map { filter -> filter.filter }
+            )
+            textInputLayoutFilter.apply {
+                editText?.setText(model.filter)
+                (editText as MaterialAutoCompleteTextView).setAdapter(adapter)
+            }
+        }
     }
 }

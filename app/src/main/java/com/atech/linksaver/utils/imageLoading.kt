@@ -14,6 +14,7 @@ fun ImageView.loadImage(url: String?) {
         placeholder(R.drawable.loading_svgrepo_com)
         transformations(RoundedCornersTransformation(16f))
         scale(coil.size.Scale.FILL)
+        error(R.drawable.loading_svgrepo_com)
     }
 }
 
@@ -28,9 +29,7 @@ fun ImageView.loadIcon(url: String?) {
                 )
             }
         }
-        if (url.endsWith(".ico")) {
-            error(R.drawable.avatar_svgrepo_com)
-        }
+        error(R.drawable.avatar_svgrepo_com)
         transformations(CircleCropTransformation())
     }
 }

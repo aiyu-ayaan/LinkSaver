@@ -25,6 +25,7 @@ class AddEditFilterViewModel @Inject constructor(
     fun updateFilter(filter: String) = viewModelScope.launch {
         filterModel?.let {
             case.insertFilter(it.copy(filter = filter))
+            linkUseCases.updateFilter.invoke(it.filter, filter)
         }
     }
 

@@ -30,7 +30,10 @@ class AddEditFilterDialog : DialogFragment() {
                 else getString(R.string.edit_filter)
             )
             .setView(binding.root)
-            .setPositiveButton(getString(R.string.add)) { _, _ ->
+            .setPositiveButton(
+                if (model == null) getString(R.string.add)
+                else getString(R.string.update)
+            ) { _, _ ->
                 setPositiveButtonLogic()
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ ->
