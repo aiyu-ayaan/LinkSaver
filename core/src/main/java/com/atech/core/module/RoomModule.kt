@@ -24,10 +24,17 @@ object RoomModule {
             LinkDatabase::class.java,
             LinkDatabase.DATABASE_NAME
         ).addMigrations(LinkDatabase.migration_1_2)
+            .addMigrations(LinkDatabase.migration_2_3)
+            .addMigrations(LinkDatabase.migration_3_4)
             .fallbackToDestructiveMigration()
             .build()
 
     @Provides
     @Singleton
     fun provideDao(database: LinkDatabase) = database.linkDao()
+
+
+    @Provides
+    @Singleton
+    fun provideFilterDao(database: LinkDatabase) = database.filterDao()
 }

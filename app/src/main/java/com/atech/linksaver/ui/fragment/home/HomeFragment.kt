@@ -5,6 +5,7 @@ import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import android.widget.CheckBox
 import androidx.activity.addCallback
+import androidx.core.view.children
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -18,19 +19,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.atech.core.data.model.FilterModel
 import com.atech.core.data.model.LinkModel
+import com.atech.core.data.use_cases.DefaultFilter
 import com.atech.core.util.openLink
 import com.atech.linksaver.R
+import com.atech.linksaver.databinding.FilterChipStandaloneBinding
+import com.atech.linksaver.databinding.FilterRadioButtonStandaloneBinding
 import com.atech.linksaver.databinding.FragmentHomeBinding
+import com.atech.linksaver.databinding.LayoutListFiltersBinding
 import com.atech.linksaver.ui.fragment.home.HomeViewModel.Companion.DEFAULT_QUERY
 import com.atech.linksaver.ui.fragment.home.adapter.LinkAdapter
 import com.atech.linksaver.utils.DELETE_DIALOG
 import com.atech.linksaver.utils.addOnContextualMenuListener
 import com.atech.linksaver.utils.universalDialog
+import com.google.android.material.chip.Chip
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.android.material.transition.platform.MaterialElevationScale
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -52,6 +61,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             setFab()
             handleBottomAppBar()
             setSearchRecyclerView()
+            setUpChips()
         }
         observeViewList()
         backButton()
@@ -135,9 +145,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun FragmentHomeBinding.setRecyclerView() {
         recyclerView.apply {
             adapter = LinkAdapter(
-                ::onLongClicked,
-                ::setClickLogic,
-                onEditClick = ::navigateToDetailFragment
+                ::onLongClicked, ::setClickLogic, onEditClick = ::navigateToDetailFragment
             ).also { homeAdapter = it }
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
@@ -155,11 +163,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.searchBar.isInvisible = true
             binding.fab.hide()
             binding.bottomAppBar.performHide()
+            disableAllChips(false)
             false
         }, onActionItemClicked = { _, item ->
             when (item?.itemId) {
                 R.id.menu_delete -> handleDelete()
                 R.id.menu_add_to_archive -> addToArchive()
+                R.id.menu_add_filter -> addToFilter()
                 else -> false
             }
         }, onDestroy = { mode ->
@@ -168,6 +178,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.bottomAppBar.performShow()
             homeAdapter.setLongClick(false)
             binding.searchBar.isInvisible = false
+            disableAllChips(true)
             mode?.finish()
         })
         val action = requireActivity().startActionMode(callback)
@@ -178,12 +189,67 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private fun disableAllChips(isEnable: Boolean) {
+        binding.btnCreateFilter.isEnabled = isEnable
+        binding.chipGroupFiler.children.forEach {
+            it.isEnabled = isEnable
+        }
+    }
+
     private fun addToArchive(): Boolean {
         viewModel.archiveLinks(selectedItem.value?.toList() ?: emptyList())
         selectedItem.value = hashSetOf()
         return true
     }
 
+    private fun addToFilter(): Boolean {
+        createFilterListDialog()
+        return true
+    }
+
+    private fun createFilterListDialog() {
+        var filterName = ""
+        val binding = LayoutListFiltersBinding.inflate(layoutInflater)
+        binding.addFilters {
+            filterName = it
+        }
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.filters))
+            .setPositiveButton(getString(R.string.add)) { _, _ ->
+                if (filterName.isNotEmpty()) {
+                    updateList(filterName)
+                }
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+            .setView(binding.root).create()
+        dialog.show()
+    }
+
+    private fun LayoutListFiltersBinding.addFilters(onClick: (String) -> Unit) = this.apply {
+        viewModel.filters.value?.map { (it, id) ->
+            getFilterRadioButton(it, id, onClick)
+        }?.forEach {
+            this.root.addView(it.root)
+        }
+    }
+
+    private fun updateList(it: String) {
+        selectedItem.value?.forEach { linkModel ->
+            updateFilter(linkModel, it)
+        }
+        selectedItem.value = hashSetOf()
+    }
+
+    private fun getFilterRadioButton(text: String, mId: Int, onClick: (String) -> Unit = {}) =
+        FilterRadioButtonStandaloneBinding.inflate(layoutInflater).also {
+            it.root.id = mId
+            it.root.text = text
+            it.root.setOnClickListener { onClick(text) }
+        }
+
+    private fun updateFilter(linkModel: LinkModel, filter: String) {
+        viewModel.addFilter(linkModel, filter)
+    }
 
     private fun handleDelete(): Boolean {
         requireContext().universalDialog(DELETE_DIALOG.apply {
@@ -229,6 +295,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel.link.observe(viewLifecycleOwner) {
             homeAdapter.submitList(it)
             binding.emptyImage.isVisible = it.isEmpty()
+            binding.recyclerView.scrollToPosition(0)
         }
     }
 
@@ -257,6 +324,60 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (text?.isEmpty() == true) viewModel.query.value = DEFAULT_QUERY
             else viewModel.query.value = text.toString()
         }
+    }
+
+    //    ----------------------------------- Chips ----------------------------------------------------
+    private fun FragmentHomeBinding.setUpChips() = this.apply {
+        viewModel.filters.observe(viewLifecycleOwner) {
+            chipGroupFiler.removeAllViews()
+            it.forEach { (name, id) ->
+                addChipToChipGrp(
+                    createFilterChip(name, id, onLongClick = {
+                        runBlocking {
+                            viewModel.getFilter(name) { filter ->
+                                navigateToAddEditFilter(filter)
+                            }
+                        }
+                    }) { isChecked ->
+                        viewModel.filter.value = if (isChecked) name else DefaultFilter.ALL.value
+                    }.root
+                )
+            }
+        }
+        btnCreateFilter.setOnClickListener {
+            navigateToAddEditFilter()
+        }
+    }
+
+    private fun FragmentHomeBinding.addChipToChipGrp(view: Chip) = this.chipGroupFiler.apply {
+        for (i in 0 until this.childCount) {
+            val chip = this.getChildAt(i) as Chip
+            if (chip.id == view.id) {
+                return@apply
+            }
+        }
+        this.addView(view)
+    }
+
+    private fun createFilterChip(
+        name: String, id: Int, onLongClick: () -> Unit = {}, onClick: (Boolean) -> Unit = {}
+    ) = FilterChipStandaloneBinding.inflate(layoutInflater).also { binding ->
+        binding.root.id = id
+        binding.root.apply {
+            text = name
+            setOnClickListener {
+                onClick(binding.root.isChecked)
+            }
+            setOnLongClickListener {
+                onLongClick()
+                true
+            }
+        }
+    }
+
+    private fun navigateToAddEditFilter(filterModel: FilterModel? = null) {
+        val action = HomeFragmentDirections.actionHomeFragmentToAddEditFilterDialog(filterModel)
+        findNavController().navigate(action)
     }
 
 }

@@ -7,6 +7,7 @@
     <string name="thumbnail_des">"Thumbnail "</string>
     <string name="enter_link">Enter valid link</string>
     <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
     <string name="link">Link</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
@@ -21,4 +22,9 @@
     <string name="settings">Setting</string>
     <string name="about">About</string>
     <string name="short_description">Short Description (Optional)</string>
+    <string name="filter_name">Filter Name</string>
+    <string name="cant_be_empty">Can\'t be empty</string>
+    <string name="add_filter">Add Filter</string>
+    <string name="edit_filter">Edit Filter</string>
+    <string name="filters">Filters</string>
 </resources>

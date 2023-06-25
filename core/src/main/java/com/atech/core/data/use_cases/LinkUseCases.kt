@@ -10,6 +10,10 @@ enum class LinkType {
     ALL, ARCHIVE, DELETED
 }
 
+enum class DefaultFilter(val value: String) {
+    ALL(""),
+}
+
 
 data class LinkUseCases @Inject constructor(
     val getAllLinks: GetAllLinks,
@@ -22,18 +26,21 @@ data class LinkUseCases @Inject constructor(
     val autoDeleteIn30Days: AutoDeleteIn30Days,
     val searchLink: SearchLink,
     val getAllLinksNotLoaded: GetAllLinksNotLoaded,
-    val updateIsThumbnailLoaded: UpdateIsThumbnailLoaded
+    val updateIsThumbnailLoaded: UpdateIsThumbnailLoaded,
+    val addFilter: AddFilter,
+    val removeFilter: RemoveFilter,
 )
 
 
 class GetAllLinks @Inject constructor(
     private val doa: LinkDao
 ) {
-    operator fun invoke(type: LinkType = LinkType.ALL) = when (type) {
-        LinkType.ALL -> doa.getAllLinks()
-        LinkType.ARCHIVE -> doa.getAllArchivedLinks()
-        LinkType.DELETED -> doa.getAllDeletedLinks()
-    }
+    operator fun invoke(type: LinkType = LinkType.ALL, filter: String = DefaultFilter.ALL.value) =
+        when (type) {
+            LinkType.ALL -> doa.getAllLinks(filter)
+            LinkType.ARCHIVE -> doa.getAllArchivedLinks()
+            LinkType.DELETED -> doa.getAllDeletedLinks()
+        }
 }
 
 
@@ -125,7 +132,6 @@ class DeleteAllLinks @Inject constructor(
     }
 }
 
-@Suppress("INTEGER_OVERFLOW")
 class AutoDeleteIn30Days @Inject constructor(
     private val doa: LinkDao
 ) {
@@ -164,5 +170,22 @@ class UpdateIsThumbnailLoaded @Inject constructor(
         doa.updateLink(linkModel.copy(isThumbnailLoaded = true)).let {
             Log.d("AAA", "UpdateIsThumbnailLoaded: $it")
         }
+    }
+}
+
+class AddFilter @Inject constructor(
+    private val doa: LinkDao
+) {
+    suspend operator fun invoke(linkModel: LinkModel, newFilter: String) {
+        doa.updateLink(linkModel.copy(filter = DefaultFilter.ALL.value))
+        doa.updateLink(linkModel.copy(filter = newFilter))
+    }
+}
+
+class RemoveFilter @Inject constructor(
+    private val doa: LinkDao
+) {
+    suspend operator fun invoke(oldFilter: String) {
+        doa.removeFilter(oldFilter)
     }
 }

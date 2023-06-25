@@ -24,6 +24,7 @@ data class LinkModel(
     val isDeleted: Boolean = false,
     val deletedAt: Long? = null,
     val isThumbnailLoaded: Boolean = false,
+    val filter: String = "",
     val created: Long = System.currentTimeMillis()
 ) : Parcelable {
     @get:Ignore

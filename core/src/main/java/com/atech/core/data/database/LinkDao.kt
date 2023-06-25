@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LinkDao {
 
-    @Query("SELECT * FROM link WHERE isArchive = 0 AND isDeleted = 0 ORDER BY created DESC")
-    fun getAllLinks(): LiveData<List<LinkModel>>
+    @Query("SELECT * FROM link WHERE filter LIKE '%'||:filter||'%' AND isArchive = 0 AND isDeleted = 0 ORDER BY created DESC")
+    fun getAllLinks(filter: String): LiveData<List<LinkModel>>
 
     @Query(
         "SELECT * FROM link WHERE url LIKE '%'||:query||'%' or title LIKE '%'||:query||'%' or description LIKE '%'||:query||'%'" +
@@ -54,5 +54,9 @@ interface LinkDao {
 
     @Query("SELECT * FROM LINK WHERE isThumbnailLoaded = 0")
     fun getAllLinksNotLoaded(): Flow<List<LinkModel>>
+
+
+    @Query("UPDATE link SET filter = '' WHERE filter = :oldFilter")
+    suspend fun removeFilter(oldFilter: String)
 
 }
