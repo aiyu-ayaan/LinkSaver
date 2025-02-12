@@ -3,14 +3,14 @@ plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     id("com.google.dagger.hilt.android")
-    kotlin("kapt")
+//    kotlin("kapt")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
 }
 
 android {
     namespace = "com.atech.core"
-    compileSdk = 33
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -44,14 +44,14 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
     implementation(libs.url.imageloader)
 }
-
-kapt {
-    correctErrorTypes = true
-}
+//
+//kapt {
+//    correctErrorTypes = true
+//}
