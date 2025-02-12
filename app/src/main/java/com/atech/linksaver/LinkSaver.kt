@@ -17,8 +17,9 @@ class LinkSaver : Application(), Configuration.Provider {
         DynamicColors.applyToActivitiesIfAvailable(this)
     }
 
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setMinimumLoggingLevel(android.util.Log.DEBUG)
             .setWorkerFactory(workerFactory)
             .build()

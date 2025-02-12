@@ -5,17 +5,17 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs")
     id("kotlin-parcelize")
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
     namespace = "com.atech.linksaver"
-    compileSdk = 33
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.atech.linksaver"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 35
         versionCode = 2
         versionName = "1.1"
 
@@ -53,7 +53,8 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.common)
-    kapt(libs.hilt.android.compiler)
+//    implementation(libs.androidx.hilt.common)
+    ksp(libs.hilt.android.compiler)
 
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
@@ -66,6 +67,6 @@ dependencies {
 
 }
 
-kapt {
-    correctErrorTypes = true
-}
+//kapt {
+//    correctErrorTypes = true
+//}
